@@ -1,0 +1,17 @@
+/* Calendar.css */
+
+.event {
+  padding: 4px;
+  margin: 2px;
+  background-color: #e6e6e6; /* Event background color */
+  cursor: pointer;
+}
+
+.slot {
+  padding: 4px;
+  margin: 2px;
+  background-color: #b2e0b2; /* Slot background color */
+  cursor: pointer;
+}
+
+/* Add more styling as needed */

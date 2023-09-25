@@ -1,0 +1,157 @@
+
+  
+  .ddc h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .drive-link-forms {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-groupss {
+    margin-bottom: 25px;
+  }
+  
+  .form-groupss label {
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #555;
+  }
+  
+  .form-groupss select,
+  .form-groupss input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #333;
+    transition: border-color 0.3s ease-in-out;
+  }
+  
+  .form-groupss select:focus,
+  .form-groupss input:focus {
+    outline: none;
+    border-color: #007bff;
+  }
+  
+  .form-groupss select {
+    appearance: none;
+    background: transparent;
+    background-repeat: no-repeat;
+    background-position: right center;
+    padding-right: 32px;
+  }
+  
+  .form-groupss input[disabled] {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+  }
+  
+  .submit-btnss {
+    padding: 16px 32px;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: #fff;
+    transition: background-color 0.3s ease-in-out;
+  }
+  
+  .submit-btnss.disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .submit-btnss:hover {
+    background-color: #0056b3;
+  }
+  
+  .toast {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    border-radius: 5px;
+    margin-top: 10px;
+  }
+  
+  .toast-icon {
+    margin-right: 10px;
+    font-size: 20px;
+  }
+  
+  .success-toast {
+    background-color: #d4edda;
+    color: #155724;
+  }
+  
+  .report-toast {
+    background-color: #fff3cd;
+    color: #856404;
+  }
+  
+  .error-toast {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+  
+
+  
+  .dd {
+    background-color: #f9f9f9;
+  }
+  
+  .ddc {
+    padding: 30px;
+    background-color: #ffffff;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.1);
+  }
+  
+  .ddc h2 {
+    font-size: 32px;
+    margin-bottom: 30px;
+  }
+  
+  .form-groupss select,
+  .form-groupss input {
+    border: 2px solid #e0e0e0;
+    transition: border-color 0.3s ease-in-out;
+  }
+  
+  .submit-btnss {
+    background-color: #1e90ff;
+    transition: background-color 0.3s ease-in-out;
+  }
+  
+  .submit-btnss:hover {
+    background-color: #0072e3;
+  }
+  
+  .toast {
+    padding: 16px 24px;
+    margin-top: 20px;
+  }
+  
+  .toast-icon {
+    font-size: 24px;
+    margin-right: 12px;
+  }
+  
+  .success-toast {
+    background-color: #d7f3e3;
+    color: #28a745;
+  }
+  
+  .report-toast {
+    background-color: #fff1c6;
+    color: #d39e00;
+  }
+  
+  .error-toast {
+    background-color: #f9cccc;
+    color: #d9534f;
+  }

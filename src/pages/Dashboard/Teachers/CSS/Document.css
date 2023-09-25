@@ -1,0 +1,114 @@
+/*
+
+.dott {
+  width: 100%;
+  max-width: 1200px; 
+  margin: 30px auto; 
+  padding: 30px;
+}
+
+
+.doct {
+  width: 100%;
+  max-width: 1200px;
+  margin-top: 30px;
+  padding: 100px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+
+.doct h2 {
+  font-size: 28px; 
+  margin-bottom: 24px; 
+  color: #333;
+}
+
+
+.student-selectot {
+  margin-bottom: 24px; 
+}
+
+.student-selectot label {
+  font-weight: bold;
+  color: #555;
+  margin-bottom: 12px; 
+}
+
+.student-selectot select {
+  width: 100%;
+  padding: 12px; 
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 18px; 
+  color: #333;
+}
+
+
+.link-type-selectot {
+  margin-bottom: 24px; 
+}
+
+.link-type-selectot label {
+  font-weight: bold;
+  color: #555;
+  margin-bottom: 12px; 
+}
+
+.link-type-selectot select {
+  width: 100%;
+  padding: 12px; 
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 18px; 
+  color: #333;
+}
+
+
+.doct h3 {
+  font-size: 22px; 
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px; 
+}
+
+.doct ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.doct li {
+  margin-bottom: 18px; 
+}
+
+.view-link-button {
+  display: block;
+  margin-top: 10px; 
+  padding: 8px 16px;
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+
+.view-link-button a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.view-link-button:hover {
+  background-color: #2980b9;
+}
+
+
+.doct p {
+  color: #777;
+  margin-top: 12px; 
+}
+*/

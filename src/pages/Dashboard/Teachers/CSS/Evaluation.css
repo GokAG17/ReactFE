@@ -1,0 +1,141 @@
+/* Evaluation.css */
+
+.de {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .dec {
+    max-width: 1000px;
+    width: 100%;
+    margin: 20px;
+    padding: 20px;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .dec h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333; /* Dark gray text color */
+  }
+  
+  .evaluation-formt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .form-selectt {
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+  }
+  
+  .form-selectt label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333; /* Dark gray text color */
+  }
+  
+  .form-selectt select {
+    width: 200px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    color: #555; /* Gray text color */
+  }
+  
+  .student-detailst {
+    margin: 20px 0;
+  }
+  
+  .student-detailst div {
+    margin: 5px 0;
+    font-weight: bold;
+    color: #333; /* Dark gray text color */
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  th, td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    color: #333; /* Dark gray text color */
+  }
+  
+  .parameter-input {
+    width: 60px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-align: center;
+  }
+  
+  .total-marks-containert {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .total-marks-label {
+    font-weight: bold;
+    margin-right: 10px;
+    color: #333; /* Dark gray text color */
+  }
+  
+  .total-marks-input {
+    width: 60px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-align: center;
+  }
+  
+  .remarkst {
+    margin-top: 20px;
+  }
+  
+  .remarkst p {
+    font-weight: bold;
+    color: #333; /* Dark gray text color */
+  }
+  
+  .remarkst textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    resize: vertical;
+    color: #333; /* Dark gray text color */
+  }
+  
+  .submit-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .submit-button:hover {
+    background-color: #0056b3;
+  }
+  

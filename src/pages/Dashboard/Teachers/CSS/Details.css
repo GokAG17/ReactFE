@@ -1,0 +1,91 @@
+
+
+.student-titlet {
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.student-selector-containert {
+  margin-bottom: 20px;
+}
+
+.student-selector {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  color: #333;
+  max-width: 100%;
+  width: 100%;
+}
+
+.student-details-containert {
+  margin-bottom: 20px;
+}
+
+.student-details-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.form-submissions-containert {
+  margin-bottom: 20px;
+}
+
+.form-submissions-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.vertical-table {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.vertical-table-row {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 10px;
+  border-top: 1px solid #ccc;
+  padding: 10px 0;
+}
+
+.vertical-table-header {
+  font-weight: bold;
+  color: #555;
+}
+
+.vertical-table-data {
+  color: #333;
+}
+
+@media (max-width: 768px) {
+  .vertical-table {
+    grid-template-columns: 1fr;
+  }
+
+  .vertical-table-row {
+    grid-template-columns: 1fr;
+    gap: 5px;
+    padding: 10px 0;
+  }
+
+  .student-selector,
+  .vertical-table-data {
+    font-size: 14px;
+  }
+
+  .student-details-title {
+    font-size: 16px;
+  }
+
+  .form-submissions-title {
+    font-size: 18px;
+  }
+}

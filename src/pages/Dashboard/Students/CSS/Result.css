@@ -1,0 +1,65 @@
+
+.result-heading {
+  font-size: 24px;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.student-rollnor {
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: #666;
+}
+
+.resultr {
+  border-top: 1px solid #e0e0e0;
+  margin-top: 30px;
+  padding-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.review,
+.guide-marks {
+  background-color: #f7f7f7;
+  padding: 15px;
+  border-radius: 5px;
+  width: 45%;
+}
+
+.review-value,
+.guide-marks-value,
+.total-marks-value {
+  font-size: 18px;
+  color: #555;
+}
+
+.loadingr {
+  font-size: 18px;
+  color: #ff5555;
+  margin-top: 30px;
+  text-align: center;
+}
+
+
+.resultr {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding-top: 30px;
+}
+
+.review,
+.guide-marks {
+  background-color: #f7f7f7;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.total-marks-value {
+  font-size: 24px;
+  color: #333;
+  font-weight: bold;
+}
+

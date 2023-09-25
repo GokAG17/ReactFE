@@ -1,0 +1,7 @@
+firstName,
+        lastName,
+        email,
+        password,
+        phoneNumber,
+        role,
+        university,
