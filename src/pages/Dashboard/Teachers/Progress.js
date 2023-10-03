@@ -1,66 +1,60 @@
 import React, { useState, useEffect } from 'react';
-import DashboardNavbar from './DashboardNavbar';
-import './CSS/Progress.css';
+import { Progress as AntProgress, Card } from 'antd';
+import 'antd/dist/antd';
+import './CSS/Progress.css'; 
 import config from '../../../config';
 
+const { Meta } = Card;
 const apiUrl = config.apiUrl;
 
-const Progress = () => {
+const Progress = ({ studentRollNo }) => {
   const [progressData, setProgressData] = useState([]);
-  const [studentRollNo, setStudentRollNo] = useState('');
-  const [studentsList, setStudentsList] = useState([]);
-  const [selectedStudent, setSelectedStudent] = useState(null); // To store selected student details
+  const [selectedStudent, setSelectedStudent] = useState(null);
   const [overallProgress, setOverallProgress] = useState(0);
 
   useEffect(() => {
-    fetchStudents();
-  }, []);
-
-  useEffect(() => {
-    if (studentRollNo) {
-      fetchProgressData();
-    }
+    fetchStudentData();
   }, [studentRollNo]);
 
-  const fetchStudents = async () => {
-    try {
-      const response = await fetch(`${apiUrl}/api/accounts?role=student`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setStudentsList(data);
-      } else {
-        console.error('Failed to fetch students:', response.status, response.statusText);
-      }
-    } catch (error) {
-      console.error('Error fetching students:', error);
-    }
-  };
-
-  const handleStudentSelection = (selectedStudentRollNo) => {
-    setStudentRollNo(selectedStudentRollNo);
-
-    // Find the selected student from the list
-    const student = studentsList.find(student => student.rollNo === selectedStudentRollNo);
-    setSelectedStudent(student);
-  };
-
-  const fetchProgressData = async () => {
+  const fetchStudentData = async () => {
     try {
       if (studentRollNo) {
-        const responseFormSubmission = await fetch(`${apiUrl}/api/formproject/student?rollNumber=${studentRollNo}`, {
+        const response = await fetch(`${apiUrl}/api/accounts?role=Student`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
           },
           credentials: 'include',
         });
+
+        if (response.ok) {
+          const data = await response.json();
+          const student = data.find((student) => student.rollNo === studentRollNo);
+          setSelectedStudent(student);
+
+          fetchProgressData(student);
+        } else {
+          console.error('Failed to fetch students:', response.status, response.statusText);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching student data:', error);
+    }
+  };
+
+  const fetchProgressData = async (student) => {
+    try {
+      if (student) {
+        const responseFormSubmission = await fetch(
+          `${apiUrl}/api/formproject/student?rollNumber=${student.rollNo}`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+          }
+        );
 
         console.log('Response from form submission API:', responseFormSubmission);
 
@@ -191,49 +185,26 @@ const Progress = () => {
 
   return (
     <div className="progress-container">
-      <DashboardNavbar>
-        <div className="progress-header">
-          <h2 className="progress-heading">Progress Overview</h2>
-          <div className="student-selection">
-            <p>Select a student:</p>
-            <select onChange={(e) => handleStudentSelection(e.target.value)}>
-              <option value="">Select Student</option>
-              {studentsList.map((student) => (
-                <option key={student.rollNo} value={student.rollNo}>
-                  {student.name} - {student.rollNo}
-                </option>
-              ))}
-            </select>
+      <div className="progress-header">
+        <h4 className="progress-heading">Progress Overview</h4>
+      </div>
+      <div className="progress-items">
+        {progressData.map((item, index) => (
+          <div key={index} className={`progress-item ${item.completed ? 'completed' : 'incomplete'}`}>
+            <AntProgress
+              type="circle"
+              percent={item.completed ? 100 : 0}
+              width={60}
+              format={() => (item.completed ? <i className="fas fa-check-circle"></i> : <i className="fas fa-circle"></i>)}
+            />
+            <p className="progress-title">{item.title}</p>
           </div>
-          {selectedStudent && (
-            <div className="selected-student-details">
-              <h3>Selected Student:</h3>
-              <p>Roll No: {selectedStudent.rollNo}</p>
-            </div>
-          )}
-          <div className="page-description">
-            <h3>Page Functionality</h3>
-            <p>This page provides an overview of the progress for selected students.</p>
-          </div>
-        </div>
-        <div className="progress-items">
-          {progressData.map((item, index) => (
-            <div key={index} className={`progress-item ${item.completed ? 'completed' : 'incomplete'}`}>
-              <span className="progress-icon">{item.completed ? <i className="fas fa-check-circle"></i> : <i className="fas fa-circle"></i>}</span>
-              <p className="progress-title">{item.title}</p>
-              <div className="progress-bar">
-                <div className="progress-fill" style={{ width: `${item.completed ? '100%' : '0%'}` }}></div>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="overall-progress">
-          <div className="overall-progress-bar">
-            <div className="overall-progress-fill" style={{ width: `${overallProgress}%` }}></div>
-          </div>
-          <p className="overall-progress-text">Overall Progress: {Math.round(overallProgress)}%</p>
-        </div>
-      </DashboardNavbar>
+        ))}
+      </div>
+      <div className="overall-progress">
+        <h3>Overall Progress</h3>
+        <AntProgress percent={Math.round(overallProgress)} type="circle" width={250} />
+      </div>
     </div>
   );
 };

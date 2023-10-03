@@ -13,7 +13,7 @@ const Contact = () => {
 
   const fetchTeachers = async () => {
     try {
-      const response = await fetch(`${apiUrl}/api/accounts?role=teacher`, {
+      const response = await fetch(`${apiUrl}/api/accounts?role=Panel`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

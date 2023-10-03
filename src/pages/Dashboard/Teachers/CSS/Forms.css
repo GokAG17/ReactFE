@@ -194,3 +194,54 @@
   margin-left: 10px; 
 }
 
+/* styles.css */
+
+/* Custom label styles */
+.custom-label {
+  font-size: 18px; /* Increase text size */
+  font-weight: bold; /* Add bold font */
+  margin-right: 10px; /* Add right margin for spacing */
+  display: inline-block; /* Ensure proper alignment */
+}
+
+/* Custom select styles */
+.custom-select {
+  font-size: 16px; /* Increase text size */
+  padding: 8px; /* Add padding for better appearance */
+}
+
+/* Custom checkbox styles */
+.custom-checkbox {
+  transform: scale(1.5); /* Increase checkbox size */
+  margin-left: 5px; /* Add left margin for spacing */
+}
+
+/* Alignment for form-switch-labelt */
+.form-switch-labelt {
+  vertical-align: middle; /* Vertically align label and checkbox */
+  margin-left: 10px; /* Add left margin for spacing */
+}
+
+/* Styling for the data table container */
+.data-table {
+  padding: 20px;
+  background-color: #f7f7f7;
+  border-radius: 10px;
+  margin: 20px auto;
+  max-width: 800px;
+}
+
+/* Styling for the table heading */
+.table-heading {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Styling for the form description paragraphs */
+.form-description {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #555;
+  margin-bottom: 10px;
+}

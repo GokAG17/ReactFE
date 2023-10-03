@@ -14,18 +14,18 @@ const Documents = () => {
   const [submissionExistsR, setSubmissionExistsR] = useState(false);
   const [submissionExistsD, setSubmissionExistsD] = useState(false);
   const [selectedLinkType, setSelectedLinkType] = useState('');
+  const [eventExists, setEventExists] = useState(false);
 
   const getCookie = (name) => {
     const value = "; " + document.cookie;
     const parts = value.split("; " + name + "=");
-    if (parts.length === 2) return parts.pop().split(";").shift().trim(); // Trim whitespace
-    return undefined; // Return undefined if the cookie name is not found
+    if (parts.length === 2) return parts.pop().split(";").shift().trim();
+    return undefined;
   };
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
-        // Get the rollNo cookie value
         const rollNo = getCookie('loggedIn');
         console.log('RollNo : ', rollNo);
         const response = await fetch(`${apiUrl}/api/currentuser?rollNo=${rollNo}`, {
@@ -38,7 +38,7 @@ const Documents = () => {
 
         if (response.ok) {
           const user = await response.json();
-          setRollNo(user.rollNo); // Set the rollNo in state
+          setRollNo(user.rollNo);
         } else {
           console.error('Error fetching current user:', response.status);
         }
@@ -55,7 +55,6 @@ const Documents = () => {
       try {
         setLoading(true);
 
-        // Check if report submission exists
         const responseReport = await fetch(`${apiUrl}/api/submitlink?rollNo=${rollNo}&linkType=report`, {
           method: 'GET',
           headers: {
@@ -66,10 +65,9 @@ const Documents = () => {
 
         if (responseReport.ok) {
           const data = await responseReport.json();
-          setSubmissionExistsR(data !== null); // Set submissionExists based on whether data is returned
+          setSubmissionExistsR(data !== null);
         }
 
-        // Check if drive submission exists
         const responseDrive = await fetch(`${apiUrl}/api/submitlink?rollNo=${rollNo}&linkType=drive`, {
           method: 'GET',
           headers: {
@@ -80,7 +78,7 @@ const Documents = () => {
 
         if (responseDrive.ok) {
           const data = await responseDrive.json();
-          setSubmissionExistsD(data !== null); // Set submissionExists based on whether data is returned
+          setSubmissionExistsD(data !== null);
         }
       } catch (error) {
         console.error('Error checking submission existence:', error);
@@ -91,6 +89,55 @@ const Documents = () => {
 
     checkSubmissionExistence();
   }, [rollNo]);
+
+  useEffect(() => {
+    const fetchEventExistence = async () => {
+      try {
+        setLoading(true);
+    
+        let eventTitle = '';
+    
+        // Determine the event title based on the selectedLinkType
+        if (selectedLinkType === 'drive') {
+          eventTitle = 'Submission Project'; // This should match the title in your database
+        } else if (selectedLinkType === 'report') {
+          eventTitle = 'Submission Report'; // This should match the title in your database
+        }
+    
+        console.log('Fetching event for selected event type:', eventTitle);
+    
+        const response = await fetch(`${apiUrl}/api/eventfilter?title=${eventTitle}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+    
+        if (response.ok) {
+          const eventData = await response.json();
+          // Check if any events matching the title were found
+          const eventExists = Array.isArray(eventData) && eventData.length > 0;
+          setEventExists(eventExists);
+    
+          // Log the event data
+          console.log('Event data:', eventData);
+    
+          console.log('Event exists for selected event type:', eventExists);
+        } else {
+          console.error('Error fetching event details:', response.status);
+        }
+      } catch (error) {
+        console.error('Error fetching event existence:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+
+    if (selectedLinkType) {
+      fetchEventExistence();
+    }
+  }, [selectedLinkType]);
 
   const handleDriveLinkChange = (e) => {
     setDriveLink(e.target.value);
@@ -104,11 +151,10 @@ const Documents = () => {
     setSelectedLinkType(e.target.value);
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!selectedLinkType) {
+    if (!selectedLinkType || !eventExists) {
       return;
     }
 
@@ -159,57 +205,66 @@ const Documents = () => {
 
   return (
     <div className="dd">
-      <DashboardNavbar >
-      <div className="ddc">
-        <h2>Project Submission</h2>
-        <form onSubmit={handleSubmit} className="drive-link-forms">
-          <div className="form-groupss">
-            <label htmlFor="linkType">Link Type:</label>
-            <select id="linkType" value={selectedLinkType} onChange={handleLinkTypeChange} required>
-              <option value="">Select Link Type</option>
-              <option value="drive">Project Link</option>
-              <option value="report">Report Link</option>
-            </select>
-          </div>
-
-          <div className="form-groupss">
-            <label htmlFor="link">Link:</label>
-            <div className="link-input">
-              <input
-                type="text"
-                id="link"
-                value={selectedLinkType === 'drive' ? driveLink : reportLink}
-                onChange={selectedLinkType === 'drive' ? handleDriveLinkChange : handleReportLinkChange}
-                required
-                disabled={(submissionStatus && submissionStatus === selectedLinkType) || (selectedLinkType === 'drive' ? submissionExistsD : submissionExistsR)}
-              />
-              {selectedLinkType === 'drive' && <i className="fas fa-folder link-icon" />}
-              {selectedLinkType === 'report' && <i className="fas fa-file-alt link-icon" />}
+      <DashboardNavbar>
+        <div className="ddc">
+          <h2>Project Submission</h2>
+          <form onSubmit={handleSubmit} className="drive-link-forms">
+            <div className="form-groupss">
+              <label htmlFor="linkType">Link Type:</label>
+              <select id="linkType" value={selectedLinkType} onChange={handleLinkTypeChange} required>
+                <option value="">Select Link Type</option>
+                <option value="drive">Project Link</option>
+                <option value="report">Report Link</option>
+              </select>
             </div>
-          </div>
-          <button
-            type="submit"
-            className={`submit-btnss ${submissionStatus || (selectedLinkType === 'drive' ? submissionExistsD : submissionExistsR) ? 'disabled' : ''}`}
-            disabled={loading || submissionStatus || (selectedLinkType === 'drive' ? submissionExistsD : submissionExistsR)}
-          >
-            {submissionStatus ? 'Submitted' : loading ? 'Submitting...' : selectedLinkType === 'drive' && submissionExistsD ? 'Submitted' : selectedLinkType === 'report' && submissionExistsR ? 'Submitted' : 'Submit'}
-          </button>
-        </form>
-        {submissionStatus && submissionStatus !== 'error' && (
-          <div className={`toast success-toast ${submissionStatus}-toast`}>
-            <i className="toast-icon" style={{ color: '#4CAF50' }}>✔️</i>
-            <p>{submissionStatus === 'drive' ? 'Drive Link' : 'Report Link'} submitted successfully!</p>
-            {setTimeout(hideToast, 3000)}
-          </div>
-        )}
-        {submissionStatus === 'error' && (
-          <div className="toast error-toast">
-            <i className="toast-icon" style={{ color: '#f44336' }}>❌</i>
-            <p>Link submission failed. Please try again later.</p>
-            {setTimeout(hideToast, 3000)}
-          </div>
-        )}
-      </div>
+
+            <div className="form-groupss">
+              <label htmlFor="link">Link:</label>
+              <div className="link-input">
+                <input
+                  type="text"
+                  id="link"
+                  value={selectedLinkType === 'drive' ? driveLink : reportLink}
+                  onChange={selectedLinkType === 'drive' ? handleDriveLinkChange : handleReportLinkChange}
+                  required
+                  disabled={
+                    (submissionStatus && submissionStatus === selectedLinkType) ||
+                    (selectedLinkType === 'drive' ? submissionExistsD : submissionExistsR) ||
+                    !eventExists
+                  }
+                />
+                {selectedLinkType === 'drive' && <i className="fas fa-folder link-icon" />}
+                {selectedLinkType === 'report' && <i className="fas fa-file-alt link-icon" />}
+              </div>
+            </div>
+            <button
+              type="submit"
+              className={`submit-btnss ${submissionStatus || (selectedLinkType === 'drive' ? submissionExistsD : submissionExistsR) ? 'disabled' : ''}`}
+              disabled={
+                loading ||
+                submissionStatus ||
+                (selectedLinkType === 'drive' ? submissionExistsD : submissionExistsR) ||
+                !eventExists
+              }
+            >
+              {submissionStatus ? 'Submitted' : loading ? 'Submitting...' : selectedLinkType === 'drive' && submissionExistsD ? 'Submitted' : selectedLinkType === 'report' && submissionExistsR ? 'Submitted' : 'Submit'}
+            </button>
+          </form>
+          {submissionStatus && submissionStatus !== 'error' && (
+            <div className={`toast success-toast ${submissionStatus}-toast`}>
+              <i className="toast-icon" style={{ color: '#4CAF50' }}>✔️</i>
+              <p>{submissionStatus === 'drive' ? 'Drive Link' : 'Report Link'} submitted successfully!</p>
+              {setTimeout(hideToast, 3000)}
+            </div>
+          )}
+          {submissionStatus === 'error' && (
+            <div className="toast error-toast">
+              <i className="toast-icon" style={{ color: '#f44336' }}>❌</i>
+              <p>Link submission failed. Please try again later.</p>
+              {setTimeout(hideToast, 3000)}
+            </div>
+          )}
+        </div>
       </DashboardNavbar>
     </div>
   );

@@ -1,91 +1,90 @@
+/* Details.css */
 
+/* Center the entire content vertically and horizontally */
+.ddct {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+  background-color: #f5f5f5; /* Add a background color for better visibility */
+}
 
 .student-titlet {
-  font-size: 28px;
-  margin-bottom: 20px;
-  color: #333;
+  font-size: 24px;
+  margin-bottom: 16px;
+  color: #333; /* Change font color for better readability */
 }
 
 .student-selector-containert {
-  margin-bottom: 20px;
-}
-
-.student-selector {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-  color: #333;
-  max-width: 100%;
-  width: 100%;
+  margin-bottom: 24px;
 }
 
 .student-details-containert {
-  margin-bottom: 20px;
-}
-
-.student-details-title {
-  font-size: 18px;
-  font-weight: bold;
-  color: #555;
-  margin-bottom: 10px;
+  margin: 24px 0;
+  text-align: left; /* Align text to the left for consistency */
 }
 
 .form-submissions-containert {
-  margin-bottom: 20px;
+  margin-top: 24px;
+  text-align: left; /* Align text to the left for consistency */
 }
 
-.form-submissions-title {
-  font-size: 20px;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 10px;
-}
-
+/* Style for the vertical table */
 .vertical-table {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
-
-.vertical-table-row {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 10px;
-  border-top: 1px solid #ccc;
-  padding: 10px 0;
+  grid-template-columns: repeat(2, minmax(150px, 1fr));
+  grid-gap: 8px;
+  text-align: left;
+  max-width: 800px; /* Increase the maximum width for better readability */
+  margin: 0 auto;
+  padding: 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  background-color: #fff; /* Add a white background for the table */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
 }
 
 .vertical-table-header {
   font-weight: bold;
-  color: #555;
+}
+
+.vertical-table-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 8px;
+  margin: 8px 0;
 }
 
 .vertical-table-data {
-  color: #333;
+  word-break: break-word;
 }
 
-@media (max-width: 768px) {
-  .vertical-table {
-    grid-template-columns: 1fr;
-  }
+/* Style for the "No submissions" message */
+.form-submissions-empty {
+  margin-top: 16px;
+  font-style: italic;
+  color: #777;
+}
 
-  .vertical-table-row {
-    grid-template-columns: 1fr;
-    gap: 5px;
-    padding: 10px 0;
-  }
+/* Style for the select box */
+.student-selector {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  outline: none;
+}
 
-  .student-selector,
-  .vertical-table-data {
-    font-size: 14px;
-  }
+/* Style for selected student details */
+.selected-student-details {
+  margin-top: 16px;
+  font-weight: bold;
+}
 
-  .student-details-title {
-    font-size: 16px;
-  }
-
-  .form-submissions-title {
-    font-size: 18px;
-  }
+/* Style for the loading spinner (if needed) */
+.loading-spinner {
+  margin-top: 16px;
 }

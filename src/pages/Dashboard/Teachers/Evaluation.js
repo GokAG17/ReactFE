@@ -50,7 +50,7 @@ const Evaluation = () => {
 
 
   const fetchStudents = useCallback(() => {
-    fetch(`${apiURL}/api/accounts?role=student`, {
+    fetch(`${apiURL}/api/accounts?role=Student`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -346,12 +346,12 @@ const Evaluation = () => {
 };
 
 
-  return (
-    <div className="de">
-      <DashboardNavbar>
+return (
+  <div className="de">
+    <DashboardNavbar>
       <div className="dec">
         <h2>Evaluation Page</h2>
-  
+
         <div className="evaluation-formt">
           <div className="form-selectt">
             <label htmlFor="formSelection">Select Form:</label>
@@ -364,7 +364,7 @@ const Evaluation = () => {
               ))}
             </select>
           </div>
-  
+
           <div className="form-selectt">
             <label htmlFor="reviewSystem">Select Review System:</label>
             <select id="reviewSystem" onChange={handleReviewSystemChange}>
@@ -374,7 +374,7 @@ const Evaluation = () => {
               <option value="Third">Third</option>
             </select>
           </div>
-  
+
           <div className="form-selectt">
             <label htmlFor="studentSelection">Select Student:</label>
             <select
@@ -392,7 +392,7 @@ const Evaluation = () => {
               ))}
             </select>
           </div>
-  
+
           {selectedStudent && (
             <div className="student-detailst">
               <div>
@@ -403,13 +403,13 @@ const Evaluation = () => {
               </div>
             </div>
           )}
-  
+
           {formData ? (
             <>
               <p>Selected Student RollNo: {selectedStudent}</p>
               <p>Selected Student: {selectedStudentName}</p>
               <p>Form Title: {formData.formTitle}</p>
-              
+
               <form onSubmit={handleSubmit}>
                 <table>
                   <thead>
@@ -426,7 +426,9 @@ const Evaluation = () => {
                         {parameter.subParameters.map((subParameter, subParameterIndex) => (
                           <tr key={`${parameterIndex}-${subParameterIndex}`}>
                             {subParameterIndex === 0 && (
-                              <td rowSpan={parameter.subParameters.length}>{parameter.parameterTitle}</td>
+                              <td rowSpan={parameter.subParameters.length}>
+                                {parameter.parameterTitle}
+                              </td>
                             )}
                             <td>{subParameter.subParameterName}</td>
                             <td>{subParameter.subParameterMaxMarks}</td>
@@ -454,14 +456,14 @@ const Evaluation = () => {
                   </tbody>
                 </table>
                 <div className="total-marks-containert">
-                       <p className="total-marks-label">Overall Total Marks:</p>
-                       <p className="total-marks-value">{overallTotalMarks}</p>
-                       <input
-                            type="number"
-                            value={calculatedTotalMarks}
-                            onChange={(e) => setCalculatedTotalMarks(parseInt(e.target.value, 10))}
-                            className="total-marks-input"
-                            />
+                  <p className="total-marks-label">Overall Total Marks:</p>
+                  <p className="total-marks-value">{overallTotalMarks}</p>
+                  <input
+                    type="number"
+                    value={calculatedTotalMarks}
+                    onChange={(e) => setCalculatedTotalMarks(parseInt(e.target.value, 10))}
+                    className="total-marks-input"
+                  />
                 </div>
                 <div className="remarkst">
                   <p>Remarks:</p>
@@ -484,10 +486,9 @@ const Evaluation = () => {
           )}
         </div>
       </div>
-      </DashboardNavbar>
-    </div>
-  );
-  
-};
+    </DashboardNavbar>
+  </div>
+);
+}
     
 export default Evaluation;

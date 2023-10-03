@@ -71,7 +71,7 @@ const View = () => {
           <div className="role-count">
             <div className="role-logo-container">
               <i className="fas fa-chalkboard-teacher role-logo teacher-logo"></i>
-              <div className="count"><p>Teacher</p>{teacherCount}</div>
+              <div className="count"><p>Panel</p>{teacherCount}</div>
             </div>
           </div>
           <div className="role-count">
@@ -85,8 +85,8 @@ const View = () => {
           <label htmlFor="roleFilter">Filter by Role:</label>
           <select id="roleFilter" value={selectedRole} onChange={handleRoleFilterChange}>
             <option value="">All</option>
-            <option value="student">Student</option>
-            <option value="teacher">Teacher</option>
+            <option value="Student">Student</option>
+            <option value="Panel">Panel</option>
             <option value="Guide">Guide</option>
           </select>
         </div>

@@ -116,7 +116,7 @@ const Calendar = () => {
   );
 
   const handleEventClick = (event) => {
-    if (currentUser && (currentUser.role === 'Guide' || currentUser.role === 'teacher')) {
+    if (currentUser && (currentUser.role === 'Guide' || currentUser.role === 'Panel')) {
       setSelectedEvent(event);
       setIsModalOpen(true);
     }
@@ -233,27 +233,36 @@ const Calendar = () => {
           </Select>
         </div>
         <div className="full-calendar-container">
-          <BigCalendar
-            localizer={localizer}
-            events={filteredEvents}
-            startAccessor="start"
-            endAccessor="end"
-            views={['month', 'week', 'day', 'agenda']} // Include 'agenda' view
-            style={{ height: 500, width: '95%' }}
-            selectable
-            resizable
-            components={{
-              event: customEventComponent,
-              slot: customSlotComponent,
-            }}
-            formats={{
-              eventTimeRangeFormat: ({ start, end }, culture, local) =>
-                `${local.format(start, 'YYYY-MM-DD h:mm A', culture)} - ${local.format(end, 'YYYY-MM-DD h:mm A', culture)}`,
-            }}
-            onSelectEvent={handleEventClick}
-            onEventResize={handleEventResize}
-            eventPropGetter={eventSlotStyle}
-          />
+          {/* Wrap the BigCalendar in a container with a fixed height */}
+          <div style={{ height: 500, overflowY: 'auto' }}>
+            <BigCalendar
+              localizer={localizer}
+              events={filteredEvents}
+              startAccessor="start"
+              endAccessor="end"
+              views={['month', 'week', 'day', 'agenda']}
+              style={{ width: '100%' }}
+              selectable
+              resizable
+              components={{
+                event: customEventComponent,
+                slot: customSlotComponent,
+              }}
+              formats={{
+                eventTimeRangeFormat: ({ start, end }, culture, local) =>
+                  `${local.format(start, 'YYYY-MM-DD h:mm A', culture)} - ${local.format(
+                    end,
+                    'YYYY-MM-DD h:mm A',
+                    culture
+                  )}`,
+              }}
+              onSelectEvent={handleEventClick}
+              onEventResize={handleEventResize}
+              eventPropGetter={eventSlotStyle}
+              // Set the dayLayoutAlgorithm to 'overlap'
+              dayLayoutAlgorithm="overlap"
+            />
+          </div>
         </div>
         {selectedEvent && (
           <Modal
@@ -264,7 +273,7 @@ const Calendar = () => {
                 Close
               </Button>,
               currentUser &&
-                (currentUser.role === 'Guide' || currentUser.role === 'teacher') && (
+                (currentUser.role === 'Guide' || currentUser.role === 'Panel') && (
                   <Button
                     key="delete"
                     type="danger"

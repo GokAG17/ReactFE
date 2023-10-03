@@ -3,9 +3,12 @@ import DashboardNavbar from './DashboardNavbar';
 import './CSS/Analytics.css';
 import { Bar } from 'react-chartjs-2';
 import config from '../../../config';
+import { Select, Button, Table, Typography, Card } from 'antd';
+
+const { Option } = Select;
+const { Title, Text } = Typography;
 
 const apiUrl = config.apiUrl;
-
 
 const Analytics = () => {
   const [students, setStudents] = useState([]);
@@ -15,7 +18,7 @@ const Analytics = () => {
 
   const fetchStudents = async () => {
     try {
-      const response = await fetch(`${apiUrl}/api/accounts?role=student`, {
+      const response = await fetch(`${apiUrl}/api/accounts?role=Student`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -71,8 +74,8 @@ const Analytics = () => {
     ],
   };
 
-  const handleStudentSelection = (e) => {
-    setSelectedStudent(e.target.value);
+  const handleStudentSelection = (value) => {
+    setSelectedStudent(value);
   };
 
   useEffect(() => {
@@ -82,66 +85,76 @@ const Analytics = () => {
   return (
     <div className="analytics-container">
       <DashboardNavbar>
-      <div className="analytics-content">
-        <h2 className="analytics-heading">Student Marks Analytics</h2>
+        <div className="analytics-content">
+          <Title level={2} className="analytics-heading">
+            Student Marks Analytics
+          </Title>
 
-        <div className="select-student">
-          <select
-            id="studentSelection"
-            value={selectedStudent}
-            onChange={handleStudentSelection}
-          >
-            <option value="">Select...</option>
-            {students.map((student) => (
-              <option key={student.rollNo} value={student.rollNo}>
-                {student.rollNo}
-              </option>
-            ))}
-          </select>
-
-          <button onClick={() => fetchMarks(selectedStudent)}>Fetch Marks</button>
-        </div>
-
-        <div className="marks-list">
-          <h3 className="marks-heading">Marks of Student:</h3>
-          <table className="marks-table">
-            <thead>
-              <tr>
-                <th>Subject</th>
-                <th>Marks</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Object.keys(marks).map((subject, index) => (
-                <tr key={index}>
-                  <td>{subject}</td>
-                  <td>{marks[subject] !== null ? marks[subject] : 'N/A'}</td>
-                </tr>
+          <div className="select-student">
+            <Select
+              id="studentSelection"
+              value={selectedStudent}
+              onChange={handleStudentSelection}
+              style={{ width: 200 }}
+            >
+              <Option value="">Select...</Option>
+              {students.map((student) => (
+                <Option key={student.rollNo} value={student.rollNo}>
+                  {student.rollNo}
+                </Option>
               ))}
-            </tbody>
-          </table>
-        </div>
+            </Select>
 
-        <div className="toggle-analytics">
-          <button onClick={toggleAnalytics}>Toggle Analytics</button>
-        </div>
-
-        {showAnalytics && (
-          <div className="analytics">
-            <h3 className="analytics-heading">Analytics based on student marks</h3>
-            <div className="chart-container">
-              <Bar data={chartData} options={{ responsive: true }} />
-            </div>
+            <Button type="primary" onClick={() => fetchMarks(selectedStudent)}>
+              Fetch Marks
+            </Button>
           </div>
-        )}
 
-        {selectedStudent && (
-          <div className="overall-performance">
-            <h3>Overall Performance</h3>
-            <p>{`Overall Performance of ${selectedStudent}: ${calculateOverallPerformance()}`}</p>
+          <div className="marks-list">
+            <Title level={3} className="marks-heading">
+              Marks of Student:
+            </Title>
+            <Table
+              dataSource={Object.keys(marks).map((subject) => ({
+                subject,
+                mark: marks[subject] !== null ? marks[subject] : 'N/A',
+              }))}
+              columns={[
+                {
+                  title: 'Subject',
+                  dataIndex: 'subject',
+                  key: 'subject',
+                },
+                {
+                  title: 'Marks',
+                  dataIndex: 'mark',
+                  key: 'mark',
+                },
+              ]}
+            />
           </div>
-        )}
-      </div>
+
+          <div className="toggle-analytics">
+            <Button onClick={toggleAnalytics}>Toggle Analytics</Button>
+          </div>
+
+          {showAnalytics && (
+            <Card className="analytics" title="Analytics based on student marks">
+              <div className="chart-container">
+                <Bar data={chartData} options={{ responsive: true }} />
+              </div>
+            </Card>
+          )}
+
+          {selectedStudent && (
+            <Card className="overall-performance">
+              <Title level={3}>Overall Performance</Title>
+              <Text>
+                {`Overall Performance of ${selectedStudent}: ${calculateOverallPerformance()}`}
+              </Text>
+            </Card>
+          )}
+        </div>
       </DashboardNavbar>
     </div>
   );

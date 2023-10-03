@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Layout, Menu, Button } from 'antd';
 import {
+  TeamOutlined,
   HomeOutlined,
   UserOutlined,
   FileTextOutlined,
@@ -72,7 +73,7 @@ const DashboardNavbar = ({ children }) => {
               <Menu.Item key="/userst" icon={<UserOutlined />}>
                 <Link to="/userst">Profile</Link>
               </Menu.Item>
-              <Menu.Item key="/studentst" icon={<FileTextOutlined />}>
+              <Menu.Item key="/studentst" icon={<TeamOutlined  />}>
                 <Link to="/studentst">Students</Link>
               </Menu.Item>
               <Menu.Item key="/formt" icon={<FormOutlined />}>
@@ -87,21 +88,20 @@ const DashboardNavbar = ({ children }) => {
               <Menu.Item key="/calendart" icon={<CalendarOutlined />}>
                 <Link to="/calendart">Calendar</Link>
               </Menu.Item>
-              <Menu.Item key="/resultst" icon={<FileDoneOutlined />}>
-                <Link to="/resultst">Result</Link>
+              <Menu.Item key="/messagest" icon={<FileTextOutlined />}>
+                <Link to="/messagest">Details</Link>
               </Menu.Item>
               <Menu.Item key="/documentst" icon={<InfoCircleOutlined />}>
-                <Link to="/documentst">Details</Link>
+                <Link to="/documentst">Documents</Link>
               </Menu.Item>
-              <Menu.Item key="/progresst" icon={<LineChartOutlined />}>
-                <Link to="/progresst">Progress</Link>
+              <Menu.Item key="/resultst" icon={<FileDoneOutlined />}>
+                <Link to="/resultst">Result</Link>
               </Menu.Item>
               <Menu.Item key="/analyticst" icon={<BarChartOutlined />}>
                 <Link to="/analyticst">Analytics</Link>
               </Menu.Item>
-              <Menu.Item key="/messagest" icon={<InfoCircleOutlined />}>
-                <Link to="/messagest">Details</Link>
-              </Menu.Item>
+              
+              
             </Menu>
           </Sider>
           <Layout.Content className="c-container">

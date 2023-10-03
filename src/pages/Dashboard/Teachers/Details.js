@@ -24,7 +24,7 @@ const Details = () => {
 
   const fetchStudents = async () => {
     try {
-      const response = await fetch(`${apiUrl}/api/accounts?role=student`, {
+      const response = await fetch(`${apiUrl}/api/accounts?role=Student`, {
         method: 'GET',
         credentials: 'include',
         headers: {

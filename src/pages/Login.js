@@ -40,17 +40,17 @@ const LoginForm = () => {
 
         const cookieOptions = {
           path: '/',
-          sameSite: 'None', // Set SameSite to "None" for cross-origin contexts
-          secure: true, // Set "Secure" for secure connections (HTTPS)
+          sameSite: 'None', 
+          secure: true, 
         };
         document.cookie = `loggedIn=${rollNo}; ${Object.entries(cookieOptions).map(([value, key]) => `${key}=${value}`).join('; ')}`;
 
   
 
         // Redirect based on the user's role
-        if (role === 'student') {
+        if (role === 'Student') {
           navigate('/dashboards');
-        } else if (role === 'teacher') {
+        } else if (role === 'Panel') {
           navigate('/dashboardt');
         } else if (role === 'Admin') {
           navigate('/dashboarda');
@@ -87,8 +87,8 @@ const LoginForm = () => {
             </label>
             <select name="role" id="role" value={role} onChange={(e) => setRole(e.target.value)} required>
               <option value="" disabled defaultValue>Select Role</option>
-              <option value="student">Student</option>
-              <option value="teacher">Panel</option>
+              <option value="Student">Student</option>
+              <option value="Panel">Panel</option>
               <option value="Admin">Admin</option>
               <option value="Guide">Guide</option>
             </select>

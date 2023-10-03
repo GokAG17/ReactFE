@@ -25,10 +25,29 @@ const Event = () => {
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setEventData({
-      ...eventData,
-      [name]: value,
-    });
+
+    if (name === 'eventType') {
+      if (value === 'Type') {
+        // Clear the title when "Type" is selected
+        setEventData({
+          ...eventData,
+          eventType: value,
+          title: '',
+        });
+      } else {
+        // Store the selected event type as the title
+        setEventData({
+          ...eventData,
+          eventType: value,
+          title: value,
+        });
+      }
+    } else {
+      setEventData({
+        ...eventData,
+        [name]: value,
+      });
+    }
   };
 
   const handleRoleChange = (event) => {
@@ -62,7 +81,7 @@ const Event = () => {
             End Date and Time: ${eventData.end}
             Created By: ${eventData.createdBy}
           `,
-          role: 'student',
+          role: 'Student',
         }),
       });
 
@@ -91,17 +110,17 @@ const Event = () => {
         const eventDataResponse = await response.json();
         console.log('Event created:', eventDataResponse);
 
-        // Send email to students
+
         await sendEmailToStudents();
 
-        // Optionally, show a success message or navigate to another page
+
       } else {
         console.error('Error creating event:', response.statusText);
-        // Handle error
+
       }
     } catch (error) {
       console.error('Error creating event:', error);
-      // Handle error
+
     }
   };
 
@@ -198,6 +217,23 @@ const Event = () => {
       <DashboardNavbar>
         <h2 className="event-title">Create Event</h2>
         <div className="event-form">
+        <label className="event-label">
+            Event Type:
+            <select
+              className="event-input"
+              name="eventType"
+              value={eventData.eventType}
+              onChange={handleInputChange}
+            >
+              <option value="">Select Event Type</option>
+              <option value="Submission Report">Submission Report</option>
+              <option value="Submission Project">Submission Project</option>
+              <option value="Submission Form">Submission Form</option>
+              <option value="Type">Type</option>
+            </select>
+          </label>
+
+          {/* Display the event type as the "Title" field */}
           <label className="event-label">
             Title:
             <input

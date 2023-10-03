@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Space } from 'antd';
+import { Table, Space, Button, Modal } from 'antd';
+import { MailOutlined, EyeOutlined } from '@ant-design/icons'; // Import Ant Design icons
 import DashboardNavbar from './DashboardNavbar';
 import './CSS/Student.css';
+import Progress from './Progress'; // Import the Progress component
 import config from '../../../config';
 
 const apiUrl = config.apiUrl;
 
 const Students = () => {
   const [students, setStudents] = useState([]);
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [isViewModalVisible, setIsViewModalVisible] = useState(false);
 
   useEffect(() => {
     fetchStudents();
@@ -15,7 +19,7 @@ const Students = () => {
 
   const fetchStudents = async () => {
     try {
-      const response = await fetch(`${apiUrl}/api/accounts?role=student`, {
+      const response = await fetch(`${apiUrl}/api/accounts?role=Student`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -31,7 +35,7 @@ const Students = () => {
           guideName: 'Not Enrolled', // Initialize an empty guide name field
         }));
         setStudents(studentsWithFullName);
-        
+
         // Fetch guide names for each student
         fetchGuideNames(studentsWithFullName);
       } else {
@@ -54,7 +58,7 @@ const Students = () => {
             },
             credentials: 'include',
           });
-  
+
           if (response.ok) {
             const guideData = await response.json();
             const guideName = guideData.guideName; // Assuming the API response structure
@@ -72,14 +76,18 @@ const Students = () => {
         }
       })
     );
-  
+
     setStudents(updatedStudents);
   };
-  
 
   const handleMailTo = (email) => {
     const mailtoLink = `mailto:${email}`;
     window.location.href = mailtoLink;
+  };
+
+  const handleViewStudent = (student) => {
+    setSelectedStudent(student);
+    setIsViewModalVisible(true);
   };
 
   const columns = [
@@ -108,7 +116,20 @@ const Students = () => {
       key: 'actions',
       render: (text, record) => (
         <Space size="small">
-          <Button type="primary" onClick={() => handleMailTo(record.email)}>Mail</Button>
+          <Button
+            type="primary"
+            icon={<MailOutlined />} // Use Ant Design Mail icon
+            onClick={() => handleMailTo(record.email)}
+          >
+            Mail
+          </Button>
+          <Button
+            type="default"
+            icon={<EyeOutlined />} // Use Ant Design Eye icon
+            onClick={() => handleViewStudent(record)}
+          >
+            View
+          </Button>
         </Space>
       ),
     },
@@ -120,6 +141,26 @@ const Students = () => {
         <div className="dtcs">
           <h2>Students</h2>
           <Table dataSource={students} columns={columns} />
+          <Modal
+            title={`Student Details - ${selectedStudent?.firstNameLastName}`}
+            visible={isViewModalVisible}
+            onCancel={() => setIsViewModalVisible(false)}
+            footer={[
+              <Button key="close" onClick={() => setIsViewModalVisible(false)}>
+                Close
+              </Button>,
+            ]}
+          >
+            {selectedStudent && (
+              <>
+                <p><strong>Roll No:</strong> {selectedStudent?.rollNo}</p>
+                <p><strong>Name:</strong> {selectedStudent?.firstNameLastName}</p>
+                <p><strong>Email:</strong> {selectedStudent?.email}</p>
+                <p><strong>Guide Name:</strong> {selectedStudent?.guideName}</p>
+                <Progress studentRollNo={selectedStudent.rollNo} /> 
+              </>
+            )}
+          </Modal>
         </div>
       </DashboardNavbar>
     </div>

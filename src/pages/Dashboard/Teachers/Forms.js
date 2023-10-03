@@ -3,7 +3,7 @@ import DashboardNavbar from './DashboardNavbar';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './CSS/Forms.css'; 
+import './CSS/Forms.css';
 import config from '../../../config';
 
 const apiUrl = config.apiUrl;
@@ -56,40 +56,44 @@ const Forms = () => {
   return (
     <div className="dft">
       <DashboardNavbar>
-      <div className="dfct">
-        <div className="form-switch-containertf">
-          <label htmlFor="review-type-select">Select Review Type:</label>
-          <select
-            id="review-type-select"
-            value={selectedReviewType}
-            onChange={handleReviewTypeChange}
-            disabled={createForm}
-          >
-            <option value="">Select</option>
-            <option value="First">First Review</option>
-            <option value="Second">Second Review</option>
-            <option value="Third">Third Review</option>
-          </select>
-          <label htmlFor="create-form-switch" className="form-switch-labelt">
-            Create New Form
-          </label>
-          <input
-            id="create-form-switch"
-            type="checkbox"
-            className="form-switch-input"
-            checked={createForm}
-            onChange={handleCreateFormToggle}
-          />
+        <div className="dfct">
+          <div className="form-switch-containertf">
+            <label htmlFor="review-type-select" className="custom-label">
+              Select Review Type:
+            </label>
+            <select
+              id="review-type-select"
+              value={selectedReviewType}
+              onChange={handleReviewTypeChange}
+              disabled={createForm}
+              className="custom-select"
+            >
+              <option value="">Select</option>
+              <option value="First">First Review</option>
+              <option value="Second">Second Review</option>
+              <option value="Third">Third Review</option>
+            </select>
+            <label htmlFor="create-form-switch" className="custom-label form-switch-labelt">
+              Create New Form
+            </label>
+            <input
+              id="create-form-switch"
+              type="checkbox"
+              className="form-switch-input custom-checkbox"
+              checked={createForm}
+              onChange={handleCreateFormToggle}
+            />
+          </div>
+          {createForm ? (
+            <FormBuilder onSubmit={handleFormSubmit} />
+          ) : (
+            <DataTable />
+          )}
         </div>
-        {createForm ? (
-          <FormBuilder onSubmit={handleFormSubmit} />
-        ) : (
-          <DataTable />
-        )}
-      </div>
-      <ToastContainer />
+        <ToastContainer />
       </DashboardNavbar>
     </div>
+
   );
 };
 
@@ -368,8 +372,12 @@ const DataTable = () => {
   // Render table with data fetched from the backend database
   return (
     <div className="data-table">
-      <h2>Form Data Table</h2>
-      {/* Render table here */}
+      <h2>Form Data Table Creation</h2>
+      <p className="form-description">Create New Form: By toggling the "Create New Form" switch, users can start building a new evaluation form. When the switch is turned on, it reveals a dynamic form creation interface.</p>
+      <p className="form-description">Add Parameters: Within the form creation interface, users can add multiple evaluation parameters. Each parameter consists of a "Parameter Title" field. Users can click the "Add Parameter" button to include additional parameters as needed.</p>
+      <p className="form-description">Add Sub-Parameters: For each parameter, users can add sub-parameters, if required. Sub-parameters have attributes like "Sub Parameter Name," "Max Marks," and "Given Marks." Sub-parameters are useful for breaking down complex evaluation criteria into smaller components.</p>
+      <p className="form-description">Overall Total Marks Calculation: The system automatically calculates and displays the overall total marks based on the sub-parameter input values. This ensures that users can see the total possible marks for the entire form.</p>
+      <p className="form-description">Form Title: Users must provide a title for the form.</p>
     </div>
   );
 };

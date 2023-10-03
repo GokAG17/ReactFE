@@ -1,9 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import DashboardNavbar from './DashboardNavbar';
-import "./CSS/Document.css";
+import { Select, List, Button, Menu, Dropdown } from 'antd';
+import {
+  FileOutlined,
+  FileTextOutlined,
+  LinkOutlined,
+} from '@ant-design/icons';
+import 'antd/dist/antd';
+import './CSS/Document.css';
 import config from '../../../config';
 
 const apiUrl = config.apiUrl;
+const { Option } = Select;
 
 const Documents = () => {
   const [students, setStudents] = useState([]);
@@ -12,12 +20,10 @@ const Documents = () => {
   const [verifiedLinks, setVerifiedLinks] = useState([]);
 
   useEffect(() => {
-    // Fetch all students
     fetchStudents();
   }, []);
 
   useEffect(() => {
-    // Fetch verified links for the selected student and link type
     if (selectedStudent && selectedLinkType) {
       fetchVerifiedLinks(selectedStudent, selectedLinkType);
     } else {
@@ -27,7 +33,7 @@ const Documents = () => {
 
   const fetchStudents = async () => {
     try {
-      const response = await fetch(`${apiUrl}/api/accounts?role=student`, {
+      const response = await fetch(`${apiUrl}/api/accounts?role=Student`, {
         method: 'GET',
         credentials: 'include',
         headers: {
@@ -38,7 +44,6 @@ const Documents = () => {
       if (response.ok) {
         const data = await response.json();
         setStudents(data);
-        console.log('Fetched students:', data);
       } else {
         console.error('Failed to fetch students:', response.statusText);
       }
@@ -49,7 +54,6 @@ const Documents = () => {
 
   const fetchVerifiedLinks = async (rollNumber, linkType) => {
     try {
-      console.log("Fetching verified links for:", rollNumber, linkType);
       const response = await fetch(
         `${apiUrl}/api/verifiedlinksubmissions?rollNo=${rollNumber}&linkType=${linkType}`,
         {
@@ -60,11 +64,10 @@ const Documents = () => {
           },
         }
       );
-  
+
       if (response.ok) {
         const data = await response.json();
         setVerifiedLinks(data);
-        console.log('Fetched verified links:', data);
       } else {
         console.error('Failed to fetch verified links:', response.statusText);
       }
@@ -73,61 +76,95 @@ const Documents = () => {
     }
   };
 
+  const linkTypeMenu = (
+    <Menu onClick={({ key }) => setSelectedLinkType(key)}>
+      <Menu.Item key="report" icon={<FileTextOutlined />}>
+        Report Link
+      </Menu.Item>
+      <Menu.Item key="drive" icon={<LinkOutlined />}>
+        Drive Link
+      </Menu.Item>
+    </Menu>
+  );
+
   return (
-    <div className="dott">
+    <div className="document-container">
       <DashboardNavbar>
-      <div className="doct">
-        <h2>Student Submissions</h2>
-        <div className="student-selectot">
-          <label htmlFor="studentSelect">Select a student:</label>
-          <select
-            id="studentSelect"
-            value={selectedStudent}
-            onChange={(e) => setSelectedStudent(e.target.value)}
-          >
-            <option value="">Select Student</option>
-            {students.map((student) => (
-              <option key={student.rollNo} value={student.rollNo}>
-                 {student.firstName} {student.lastName} ({student.rollNo})
-              </option>
-            ))}
-          </select>
-        </div>
-        {selectedStudent && (
-          <div>
-            <div className="link-type-selectot">
-              <label htmlFor="linkTypeSelect">Select a link type:</label>
-              <select
-                id="linkTypeSelect"
-                value={selectedLinkType}
-                onChange={(e) => setSelectedLinkType(e.target.value)}
-              >
-                <option value="">Select Link Type</option>
-                <option value="report">Report Link</option>
-                <option value="drive">Drive Link</option>
-                {/* Add other link types as needed */}
-              </select>
-            </div>
-            <h3>Verified Links for {selectedStudent}</h3>
-            {verifiedLinks.length > 0 ? (
-              <ul>
-                {verifiedLinks.map((link, index) => (
-                  <li key={index}>
-                    {link.linkType}: {link.link}
-                    <button className="view-link-button">
-                      <a href={link.link} target="_blank" rel="noopener noreferrer">
-                        View Link
-                      </a>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>No verified links found for {selectedStudent}</p>
-            )}
+        <div className="document-content">
+          <h2 className="document-title">Student Submissions</h2>
+          <div className="student-selector">
+            <label htmlFor="studentSelect">Select a student:</label>
+            <Select
+              id="studentSelect"
+              value={selectedStudent}
+              onChange={(value) => setSelectedStudent(value)}
+              style={{ width: 200 }}
+            >
+              <Option value="">Select Student</Option>
+              {students.map((student) => (
+                <Option key={student.rollNo} value={student.rollNo}>
+                  {student.firstName} {student.lastName} ({student.rollNo})
+                </Option>
+              ))}
+            </Select>
           </div>
-        )}
-      </div>
+          {selectedStudent && (
+            <div>
+              <div className="link-type-selector">
+                <label>Select a link type:</label>
+                <Dropdown overlay={linkTypeMenu}>
+                  <Button>
+                    {selectedLinkType ? (
+                      <span>
+                        {selectedLinkType === 'report' ? (
+                          <FileTextOutlined />
+                        ) : (
+                          <LinkOutlined />
+                        )}
+                        {selectedLinkType}
+                      </span>
+                    ) : (
+                      'Select Link Type'
+                    )}
+                  </Button>
+                </Dropdown>
+              </div>
+              <h3 className="verified-links-title">
+                Verified Links for {selectedStudent}
+              </h3>
+              {verifiedLinks.length > 0 ? (
+                <List
+                  dataSource={verifiedLinks}
+                  renderItem={(link, index) => (
+                    <List.Item className="link-item">
+                      <span>
+                        {link.linkType === 'report' ? (
+                          <FileOutlined />
+                        ) : (
+                          <LinkOutlined />
+                        )}
+                        {link.linkType}: {link.link}
+                      </span>
+                      <Button className="view-link-button">
+                        <a
+                          href={link.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          View Link
+                        </a>
+                      </Button>
+                    </List.Item>
+                  )}
+                />
+              ) : (
+                <p className="no-links-message">
+                  No verified links found for {selectedStudent}
+                </p>
+              )}
+            </div>
+          )}
+        </div>
       </DashboardNavbar>
     </div>
   );
