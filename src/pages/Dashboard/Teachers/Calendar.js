@@ -7,6 +7,7 @@ import moment from 'moment';
 import { getCookie } from './cookie';
 import config from '../../../config';
 import { Button, Modal, Select } from 'antd';
+import './CSS/Calendar.css'; // Import your custom CSS file
 
 const { Option } = Select;
 
@@ -305,5 +306,6 @@ const Calendar = () => {
     </div>
   );
 };
+
 
 export default Calendar;

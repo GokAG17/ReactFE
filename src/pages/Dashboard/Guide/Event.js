@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import DashboardNavbar from './DashboardNavbar';
 import './CSS/Event.css';
 import config from '../../../config';
+import { getCookie } from './cookie';
 
 const apiUrl = config.apiUrl;
 
@@ -25,10 +26,29 @@ const Event = () => {
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setEventData({
-      ...eventData,
-      [name]: value,
-    });
+
+    if (name === 'eventType') {
+      if (value === 'Type') {
+        // Clear the title when "Type" is selected
+        setEventData({
+          ...eventData,
+          eventType: value,
+          title: '',
+        });
+      } else {
+        // Store the selected event type as the title
+        setEventData({
+          ...eventData,
+          eventType: value,
+          title: value,
+        });
+      }
+    } else {
+      setEventData({
+        ...eventData,
+        [name]: value,
+      });
+    }
   };
 
   const handleRoleChange = (event) => {
@@ -62,7 +82,7 @@ const Event = () => {
             End Date and Time: ${eventData.end}
             Created By: ${eventData.createdBy}
           `,
-          role: 'student',
+          role: 'Student',
         }),
       });
 
@@ -77,33 +97,39 @@ const Event = () => {
   };
 
   const handleCreateEvent = async () => {
+    // Get the guideRollNo from the loggedIn cookie
+    const guideRollNo = getCookie('loggedIn');
+  
+    // Include guideRollNo in the eventData
+    const eventDataWithGuideRollNo = {
+      ...eventData,
+      guideRollNo,
+    };
+  
     try {
-      const response = await fetch(`${apiUrl}/api/events`, {
+      const response = await fetch(`${apiUrl}/api/guide-events`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify(eventData),
+        body: JSON.stringify(eventDataWithGuideRollNo),
       });
-
+  
       if (response.ok) {
         const eventDataResponse = await response.json();
         console.log('Event created:', eventDataResponse);
-
-        // Send email to students
-        await sendEmailToStudents();
-
-        // Optionally, show a success message or navigate to another page
+  
+        // Send emails or perform other actions if needed
+       // await sendEmailToStudents();
       } else {
         console.error('Error creating event:', response.statusText);
-        // Handle error
       }
     } catch (error) {
       console.error('Error creating event:', error);
-      // Handle error
     }
   };
+  
 
   const handleSlotBooking = async () => {
     if (
@@ -198,6 +224,23 @@ const Event = () => {
       <DashboardNavbar>
         <h2 className="event-title">Create Event</h2>
         <div className="event-form">
+        <label className="event-label">
+            Event Type:
+            <select
+              className="event-input"
+              name="eventType"
+              value={eventData.eventType}
+              onChange={handleInputChange}
+            >
+              <option value="">Select Event Type</option>
+              <option value="Submission Report">Submission Report</option>
+              <option value="Submission Project">Submission Project</option>
+              <option value="Submission Form">Submission Form</option>
+              <option value="Type">Type</option>
+            </select>
+          </label>
+
+          {/* Display the event type as the "Title" field */}
           <label className="event-label">
             Title:
             <input

@@ -4,7 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import DashboardNavbar from './DashboardNavbar';
 import { Form, Input, Button, InputNumber } from 'antd';
 import config from '../../../config';
-
+import './CSS/Forms.css';
 const apiUrl = config.apiUrl;
 
 const Forms = () => {
@@ -50,6 +50,7 @@ const Forms = () => {
               teamMember2: null,
               teamMember3: null,
             }}
+            size="large" 
           >
             <Form.Item
               name="studentName"
@@ -88,16 +89,52 @@ const Forms = () => {
               <Input />
             </Form.Item>
             <Form.Item
+              name="teamMember1RollNumber"
+              label="Team Member 1 Roll Number:"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please enter team member 1 roll number',
+                },
+              ]}
+            >
+              <InputNumber style={{ width: '100%' }} />
+            </Form.Item>
+            <Form.Item
               name="teamMember2"
               label="Team Member 2:"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please enter team member 2',
+                },
+              ]}
             >
               <Input />
+            </Form.Item>
+            <Form.Item
+              name="teamMember2RollNumber"
+              label="Team Member 2 Roll Number:"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please enter team member 2 roll number',
+                },
+              ]}
+            >
+              <InputNumber style={{ width: '100%' }} />
             </Form.Item>
             <Form.Item
               name="teamMember3"
               label="Team Member 3:"
             >
               <Input />
+            </Form.Item>
+            <Form.Item
+              name="teamMember3RollNumber"
+              label="Team Member 3 Roll Number:"
+            >
+              <InputNumber style={{ width: '100%' }} />
             </Form.Item>
             <Form.Item
               name="projectTitle"

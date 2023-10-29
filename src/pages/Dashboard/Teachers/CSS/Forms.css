@@ -1,247 +1,310 @@
-
-
-
-.form-switch-containertf {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 30px;
+/* Container styles */
+.dft {
+  background-color: #f0f0f0;
+  padding: 24px;
 }
 
+/* Form Options card styles */
+.ant-card-head-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #1890ff; /* Change card title color as needed */
+  margin-bottom: 16px;
+}
+
+/* Form Options Form styles */
+.ant-form-item-label {
+  font-weight: bold;
+}
+
+/* Create New Form switch styles */
+.ant-switch-inner {
+  background-color: #1890ff; /* Change switch color as needed */
+}
+
+/* Create New Form switch label styles */
 .form-switch-labelt {
-  color: #333;
   font-weight: bold;
-  cursor: pointer;
-  transition: color 0.3s ease;
+  margin-left: 8px;
 }
 
-.form-switch-labelt:hover {
-  color: #555;
-}
-
-.form-switch-input {
-  margin-left: 10px;
-}
-
-.form-switch-input:checked + .form-switch-labelt {
-  color: #2ecc71;
-}
-
-.form-switch-input:checked + .form-switch-labelt::before {
-  content: "✓";
-  margin-right: 5px;
-}
-
+/* Form Builder styles */
 .form-buildertf {
-  text-align: center;
+  background-color: #fff;
+  padding: 24px;
+  border: 1px solid #e8e8e8;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
 }
 
+/* Form Builder title styles */
 .form-buildertf h2 {
-  font-size: 28px;
-  margin-bottom: 20px;
-  color: #333;
-}
-
-.form-fieldtf {
-  margin-bottom: 15px;
-}
-
-.form-fieldtf label {
+  font-size: 24px;
   font-weight: bold;
-  color: #555;
-  display: block;
-  margin-bottom: 5px;
+  margin-bottom: 16px;
 }
 
-.form-fieldtf input {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-  color: #333;
+/* Form Builder input field styles */
+.form-buildertf input {
   width: 100%;
-  max-width: 100%;
+  padding: 8px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  margin-bottom: 16px;
 }
 
-.form-columnst {
-  display: flex;
-  gap: 20px;
-  align-items: flex-start; 
-}
-
-.form-columntf {
-  flex: 1;
-}
-
-.form-headertf {
-  font-weight: bold;
-  color: #555;
-  margin-bottom: 15px;
-}
-
+/* Form Builder parameter styles */
 .parameter-fieldtf {
-  margin-bottom: 20px;
+  border: 1px solid #e8e8e8;
+  padding: 16px;
+  margin-bottom: 16px;
+  border-radius: 4px;
 }
 
+/* Form Builder parameter title styles */
 .parameter-title-rowtf {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 10px;
+  margin-bottom: 16px;
 }
 
-.parameter-title-rowtf label {
-  flex: 1;
-  font-weight: bold;
-  color: #555;
-}
-
+/* Form Builder parameter title input styles */
 .parameter-title-rowtf input {
-  flex: 2;
+  flex: 1;
+  margin-right: 16px;
 }
 
-.remove-parameter-buttontf {
-  background-color: #ff5c5c;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  padding: 5px 10px;
-  cursor: pointer;
-}
-
+/* Form Builder sub-parameter styles */
 .sub-parameter-fieldtf {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
+  border: 1px solid #e8e8e8;
+  padding: 16px;
+  margin-bottom: 16px;
+  border-radius: 4px;
 }
 
-.sub-parameter-fieldtf label {
-  flex: 1;
-  font-weight: bold;
-  color: #555;
-}
-
+/* Form Builder sub-parameter input styles */
 .sub-parameter-fieldtf input {
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+/* DataTable styles */
+.data-table {
+  background-color: #fff;
+  padding: 24px;
+  border: 1px solid #e8e8e8;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+/* DataTable title styles */
+.data-table h2 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+/* DataTable paragraph styles */
+.data-table p {
+  font-size: 16px;
+  margin-bottom: 16px;
+}
+
+/* DataTable strong text styles */
+.data-table strong {
+  font-weight: bold;
+}
+
+/* DataTable button styles */
+.data-table button {
+  margin-right: 16px;
+}
+
+/* DataTable form description styles */
+.form-description {
+  margin-bottom: 16px;
+}
+
+/* Parameter Field Container */
+.parameter-fieldtf {
+  border: 1px solid #e8e8e8;
+  padding: 16px;
+  margin-bottom: 16px;
+  border-radius: 4px;
+}
+
+/* Parameter Title */
+.parameter-fieldtf .ant-typography {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+/* Parameter Title Input */
+.parameter-fieldtf .ant-form-item-label {
+  font-weight: bold;
+}
+
+/* Sub-Parameter Container */
+.parameter-fieldtf .sub-parameter-fieldtf {
+  border: 1px solid #e8e8e8;
+  padding: 16px;
+  margin-bottom: 16px;
+  border-radius: 4px;
+}
+
+/* Sub-Parameter Title */
+.parameter-fieldtf .sub-parameter-fieldtf .ant-typography {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+/* Sub-Parameter Input Fields */
+.parameter-fieldtf .sub-parameter-fieldtf .ant-input {
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+/* Sub-Parameter Remove Button */
+.parameter-fieldtf .sub-parameter-fieldtf .ant-btn-danger {
+  margin-top: 8px;
+}
+
+/* Add Sub-Parameter Button */
+.parameter-fieldtf .ant-btn-primary {
+  margin-top: 16px;
+}
+
+/* Remove Parameter Button */
+.parameter-fieldtf .ant-btn-danger {
+  margin-top: 16px;
+}
+
+/* Parameter Total Marks Input */
+.parameter-fieldtf .ant-input[readonly] {
+  background-color: #f0f0f0;
+  cursor: not-allowed;
+}
+
+/* Parameter Total Marks Label */
+.parameter-fieldtf .ant-form-item-label[for*="parameterTotalMarks"] {
+  font-weight: normal;
+  margin-top: 8px;
+}
+
+/* Parameter Remove Button */
+.parameter-fieldtf .ant-btn-danger {
+  margin-top: 16px;
+}
+
+/* Parameter and Sub-Parameter Section */
+.parameter-fieldtf .parameter-section,
+.parameter-fieldtf .sub-parameter-section {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Parameter and Sub-Parameter Title */
+.parameter-fieldtf .parameter-section .ant-typography,
+.parameter-fieldtf .sub-parameter-section .ant-typography {
   flex: 1;
-  padding: 10px;
+}
+
+/* Sub-Parameter Remove Button Alignment */
+.parameter-fieldtf .sub-parameter-section .ant-btn-danger {
+  margin-left: 8px;
+}
+
+/* Add Sub-Parameter Button Alignment */
+.parameter-fieldtf .parameter-section .ant-btn-primary {
+  margin-left: 8px;
+}
+
+/* Add these CSS styles to target the specific elements within the form-buildertf component */
+.form-buildertf {
+  background-color: #f7f7f7;
+  padding: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  font-size: 16px;
-  color: #333;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.remove-sub-parameter-button {
-  background-color: #ff5c5c;
-  color: #fff;
-  border: none;
+.form-buildertf h2 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+.form-fieldtf {
+  margin-bottom: 20px;
+}
+
+.form-fieldtf label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.form-fieldtf input[type="text"],
+.form-fieldtf input[type="number"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form-columnst {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.form-columntf {
+  flex: 1;
+  margin-right: 20px;
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #ccc;
   border-radius: 5px;
-  padding: 5px 10px;
-  margin-left: 10px;
-  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-headertf {
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 
 .overall-total-marks-rowtf {
   margin-top: 20px;
-  display: flex;
-  align-items: center;
 }
 
 .overall-total-marks-rowtf label {
   font-weight: bold;
-  color: #555;
-  margin-right: 10px;
 }
 
-.overall-total-marks-rowtf input {
-  padding: 10px;
+.overall-total-marks-rowtf input[type="number"] {
+  width: 100%;
+  padding: 8px;
   border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-  color: #333;
-  width: 100px;
+  border-radius: 4px;
 }
 
 .add-parameter-buttontf,
 .submit-buttontf {
-  background-color: #2ecc71;
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #007bff;
   color: #fff;
   border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
-  font-size: 16px;
+  border-radius: 4px;
   cursor: pointer;
-  margin-top: 15px;
 }
 
-.add-sub-parameter-buttontf {
-  background-color: #2ecc71;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  margin-top: 15px;
+.add-parameter-buttontf:hover,
+.submit-buttontf:hover {
+  background-color: #0056b3;
 }
 
-.add-parameter-buttontf {
-  background-color: #3498db;
-  
-}
+/* Add additional styles as needed */
 
-.submit-buttontf {
-  background-color: #2ecc71;
-  margin-left: 10px; 
-}
 
-/* styles.css */
-
-/* Custom label styles */
-.custom-label {
-  font-size: 18px; /* Increase text size */
-  font-weight: bold; /* Add bold font */
-  margin-right: 10px; /* Add right margin for spacing */
-  display: inline-block; /* Ensure proper alignment */
-}
-
-/* Custom select styles */
-.custom-select {
-  font-size: 16px; /* Increase text size */
-  padding: 8px; /* Add padding for better appearance */
-}
-
-/* Custom checkbox styles */
-.custom-checkbox {
-  transform: scale(1.5); /* Increase checkbox size */
-  margin-left: 5px; /* Add left margin for spacing */
-}
-
-/* Alignment for form-switch-labelt */
-.form-switch-labelt {
-  vertical-align: middle; /* Vertically align label and checkbox */
-  margin-left: 10px; /* Add left margin for spacing */
-}
-
-/* Styling for the data table container */
-.data-table {
-  padding: 20px;
-  background-color: #f7f7f7;
-  border-radius: 10px;
-  margin: 20px auto;
-  max-width: 800px;
-}
-
-/* Styling for the table heading */
-.table-heading {
-  font-size: 24px;
-  color: #333;
-  margin-bottom: 20px;
-}
-
-/* Styling for the form description paragraphs */
-.form-description {
-  font-size: 16px;
-  line-height: 1.5;
-  color: #555;
-  margin-bottom: 10px;
-}

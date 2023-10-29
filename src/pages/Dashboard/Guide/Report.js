@@ -3,13 +3,25 @@ import DashboardNavbar from './DashboardNavbar';
 import './CSS/Document.css';
 import { getCookie } from './cookie';
 import config from '../../../config';
+import {
+  Select,
+  Spin,
+  Typography,
+  Button,
+  notification,
+} from 'antd';
+import {
+  LinkOutlined,
+  CheckCircleOutlined,
+} from '@ant-design/icons';
+
+const { Option } = Select;
+const { Text, Title } = Typography;
 
 const apiURL = config.apiUrl;
 
 const Documents = () => {
-  // eslint-disable-next-line no-unused-vars
   const [currentUser, setCurrentUser] = useState(null);
-
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedStudent, setSelectedStudent] = useState('');
@@ -18,11 +30,10 @@ const Documents = () => {
   const [verifiedLink, setVerifiedLink] = useState('');
 
   useEffect(() => {
-    // Fetch user and student data
     const fetchUserData = async () => {
       try {
         const rollNo = getCookie('loggedIn');
-        
+
         const response = await fetch(`${apiURL}/api/currentuser?rollNo=${rollNo}`, {
           method: 'GET',
           headers: {
@@ -74,18 +85,18 @@ const Documents = () => {
     fetchUserData();
   }, []);
 
-  const handleStudentSelect = (e) => {
-    setSelectedStudent(e.target.value);
+  const handleStudentSelect = (value) => {
+    setSelectedStudent(value);
     setSelectedLinkType('');
     setSubmissionInfo(null);
     setVerifiedLink('');
   };
 
-  const handleLinkTypeSelect = (e) => {
-    setSelectedLinkType(e.target.value);
+  const handleLinkTypeSelect = (value) => {
+    setSelectedLinkType(value);
     setSubmissionInfo(null);
     setVerifiedLink('');
-    fetchSubmissionInfo(selectedStudent, e.target.value);
+    fetchSubmissionInfo(selectedStudent, value);
   };
 
   const fetchSubmissionInfo = async (studentRollNo, linkType) => {
@@ -114,8 +125,7 @@ const Documents = () => {
 
   const handleVerifyLink = async (link) => {
     try {
-      // Send a POST request to the server to verify the link
-      const response = await fetch(`${apiURL}/api/verifylink`,{
+      const response = await fetch(`${apiURL}/api/verifylink`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -125,91 +135,109 @@ const Documents = () => {
           link: link,
         }),
       });
-  
+
       if (response.ok) {
-        // Mark the link as verified on the client-side
         setVerifiedLink(link);
+        notification.success({
+          message: 'Link Verified',
+          description: 'Link verified successfully!',
+          icon: <CheckCircleOutlined style={{ color: '#52c41a' }} />,
+        });
       } else {
         console.error('Link verification failed:', response.status, response.statusText);
-        // Handle error, display a message, or take appropriate action
+        notification.error({
+          message: 'Link Verification Failed',
+          description: 'Failed to verify the link. Please try again.',
+          icon: <LinkOutlined style={{ color: '#f5222d' }} />,
+        });
       }
     } catch (error) {
       console.error('Error verifying link:', error);
-      // Handle error, display a message, or take appropriate action
+      notification.error({
+        message: 'Error Verifying Link',
+        description: 'An error occurred while verifying the link. Please try again later.',
+        icon: <LinkOutlined style={{ color: '#f5222d' }} />,
+      });
     }
   };
-  
 
   return (
     <div className="dr">
       <DashboardNavbar>
-      <div className="drc">
-        <h2>Student Submissions</h2>
-        {loading ? (
-          <p>Loading student submissions...</p>
-        ) : (
-          <div>
-            <div className="student-selectg">
-              <label htmlFor="studentSelect">Select a student:</label>
-              <select
-                id="studentSelect"
-                value={selectedStudent}
-                onChange={handleStudentSelect}
-              >
-                <option value="">All Students</option>
-                {students.map((student, index) => (
-                  <option key={index} value={student.rollNumber}>
-                    {student.studentName} ({student.rollNumber})
-                  </option>
-                ))}
-              </select>
+        <div className="drc">
+          <Title level={2}>Student Submissions</Title>
+          {loading ? (
+            <Spin size="large" />
+          ) : (
+            <div>
+              <div className="student-selectg">
+                <Text strong>Select a student:</Text>
+                <Select
+                  placeholder="Select Student"
+                  style={{ width: 200 }}
+                  value={selectedStudent}
+                  onChange={handleStudentSelect}
+                >
+                  <Option value="">All Students</Option>
+                  {students.map((student, index) => (
+                    <Option key={index} value={student.rollNumber}>
+                      {student.studentName} ({student.rollNumber})
+                    </Option>
+                  ))}
+                </Select>
+              </div>
+              {selectedStudent && (
+                <div className="link-type-selectg">
+                  <Text strong>Select a link type:</Text>
+                  <Select
+                    placeholder="Select Link Type"
+                    style={{ width: 200 }}
+                    value={selectedLinkType}
+                    onChange={handleLinkTypeSelect}
+                  >
+                    <Option value="report">Report Link</Option>
+                    <Option value="drive">Drive Link</Option>
+                  </Select>
+                </div>
+              )}
+              {submissionInfo ? (
+                <div className="submission-infog">
+                  <Text strong>Student Name:</Text>
+                  <p>{submissionInfo.studentName}</p>
+                  <Text strong>Link Type:</Text>
+                  <p>{submissionInfo.linkType}</p>
+                  <Text strong>Link:</Text>
+                  <p>{submissionInfo.link}</p>
+                  <Button
+                    type="primary"
+                    icon={<LinkOutlined />}
+                    onClick={() => window.open(submissionInfo.link, '_blank')}
+                  >
+                    View Link
+                  </Button>
+                  <Button
+                    type="primary"
+                    icon={<CheckCircleOutlined />}
+                    onClick={() => handleVerifyLink(submissionInfo.link)}
+                    disabled={verifiedLink === submissionInfo.link}
+                  >
+                    Verify Link
+                  </Button>
+                  {verifiedLink === submissionInfo.link && (
+                    <Text className="verified-link-msgg" type="success">
+                      Link verified successfully!
+                    </Text>
+                  )}
+                </div>
+              ) : (
+                <Text>Student has not submitted.</Text>
+              )}
             </div>
-            {selectedStudent && (
-              <div className="link-type-selectg">
-                <label htmlFor="linkTypeSelect">Select a link type:</label>
-                <select
-                  id="linkTypeSelect"
-                  value={selectedLinkType}
-                  onChange={handleLinkTypeSelect}
-                >
-                  <option value="">Select Link Type</option>
-                  <option value="report">Report Link</option>
-                  <option value="drive">Drive Link</option>
-                </select>
-              </div>
-            )}
-            {submissionInfo ? (
-              <div className="submission-infog">
-                <p>Student Name: {submissionInfo.studentName}</p>
-                <p>Link Type: {submissionInfo.linkType}</p>
-                <p>Link: {submissionInfo.link}</p>
-                <button
-                  className="view-link-btng"
-                  onClick={() => window.open(submissionInfo.link, '_blank')}
-                >
-                  View Link
-                </button>
-                <button
-                  className="verify-link-btng"
-                  onClick={() => handleVerifyLink(submissionInfo.link)}
-                  disabled={verifiedLink === submissionInfo.link}
-                >
-                  Verify Link
-                </button>
-                {verifiedLink === submissionInfo.link && (
-                  <p className="verified-link-msgg">Link verified successfully!</p>
-                )}
-              </div>
-            ) : (
-              <p>Student not submitted.</p>
-            )}
-          </div>
-        )}
-      </div>
+          )}
+        </div>
       </DashboardNavbar>
     </div>
   );
 };
-
 
 export default Documents;

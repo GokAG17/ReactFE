@@ -116,56 +116,10 @@ const Calendar = () => {
   );
 
   const handleEventClick = (event) => {
-    if (currentUser && (currentUser.role === 'Student' || currentUser.role === 'Student')) {
+    if (currentUser && (currentUser.role === 'Student' || currentUser.role === 'Admin')) {
       setSelectedEvent(event);
       setIsModalOpen(true);
     }
-  };
-
-  const handleDeleteEvent = (eventId) => {
-    fetch(`${apiUrl}/api/events/${eventId}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-    })
-      .then(response => {
-        if (response.ok) {
-          setEvents(events.filter(e => e.id !== eventId));
-          setSelectedEvent(null);
-          setIsModalOpen(false);
-        } else {
-          console.error('Error deleting event:', response.status, response.statusText);
-        }
-      })
-      .catch(error => {
-        console.error('Error deleting event:', error);
-      });
-  };
-
-  const handleDeleteSlot = (slotId) => {
-    // Update the URL to match the server route for deleting booked slots
-    fetch(`${apiUrl}/api/booked-slots/${slotId}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-    })
-      .then(response => {
-        if (response.ok) {
-          // Update the state and close the modal if deletion is successful
-          setEvents(events.filter(e => e.id !== slotId));
-          setSelectedEvent(null);
-          setIsModalOpen(false);
-        } else {
-          console.error('Error deleting slot:', response.status, response.statusText);
-        }
-      })
-      .catch(error => {
-        console.error('Error deleting slot:', error);
-      });
   };
 
   const handleEventResize = (eventResizeInfo) => {

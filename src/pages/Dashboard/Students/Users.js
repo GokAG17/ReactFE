@@ -15,7 +15,7 @@ import {
   Col,
   Avatar,
   Menu,
-  message, // Import the message component from Ant Design
+  message,
 } from 'antd';
 import {
   UserOutlined,
@@ -29,7 +29,7 @@ import { getCookie } from './cookie';
 
 const apiUrl = config.apiUrl;
 const { Meta } = Card;
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 const Users = () => {
   const [user, setUser] = useState(null);
@@ -145,16 +145,18 @@ const Users = () => {
     style: {
       fontSize: '18px',
       fontWeight: 'bold',
+      marginRight: '8px', 
+      textAlign: 'left', 
     },
   };
 
-  const valueColProps = {
+  /*const valueColProps = {
     flex: '0 0 75%',
     style: {
       fontSize: '16px',
       marginBottom: '12px',
     },
-  };
+  };*/
 
   return (
     <div className="us">
@@ -162,36 +164,31 @@ const Users = () => {
         <div className="us1">
           <Row gutter={0}>
             <Col xxl={6} lg={8} md={10} xs={24}>
-              <Row gutter={0} justify="center" align="middle">
-                <Col xxl={10} lg={80} md={100} xs={24}>
-                  <Menu
-                    mode="vertical"
-                    theme="light"
-                    inlineIndent={24}
-                    style={{ width: '100%', height: '100%', borderRight: 'none' }}
-                    defaultSelectedKeys={['profile']}
-                    selectedKeys={[selectedMenu]}
-                    onClick={({ key }) => setSelectedMenu(key)}
-                  >
-                    <div className="user-container">
-                      <Avatar size={100} icon={<UserOutlined />} className="user-avatar" /> {/* Increase avatar size */}
-                      <div className="user-details">
-                        <Title level={4} className="user-name">
-                          {user?.firstName} {user?.lastName}
-                        </Title>
-                        <p className="user-role">Role: {user?.role}</p>
-                      </div>
-                    </div>
-                    <Menu.Item key="profile" icon={<ProfileOutlined />} className="custom-menu-item">
-                      Profile
-                    </Menu.Item>
-                    <Menu.Item key="password" icon={<LockOutlined />} className="custom-menu-item">
-                      Password
-                    </Menu.Item>
-                  </Menu>
-
-                </Col>
-              </Row>
+              <Menu
+                mode="vertical"
+                theme="light"
+                inlineIndent={24}
+                style={{ width: '100%', height: '100%', borderRight: 'none' }}
+                defaultSelectedKeys={['profile']}
+                selectedKeys={[selectedMenu]}
+                onClick={({ key }) => setSelectedMenu(key)}
+              >
+                <div className="user-container">
+                  <Avatar size={100} icon={<UserOutlined />} className="user-avatar" />
+                  <div className="user-details">
+                    <Title level={4} className="user-name">
+                      {user?.firstName} {user?.lastName}
+                    </Title>
+                    <Text className="user-role">Role: {user?.role}</Text>
+                  </div>
+                </div>
+                <Menu.Item key="profile" icon={<ProfileOutlined />} className="custom-menu-item">
+                  Profile
+                </Menu.Item>
+                <Menu.Item key="password" icon={<LockOutlined />} className="custom-menu-item">
+                  Password
+                </Menu.Item>
+              </Menu>
             </Col>
             <Col xxl={18} lg={16} md={14} xs={24}>
               {loading ? (
@@ -216,9 +213,9 @@ const Users = () => {
                                   labelCol={labelColProps}
                                 >
                                   {editMode ? (
-                                    <Input name="firstName" onChange={handleInputChange} />
+                                    <Input name="firstName" value={editedUser.firstName} onChange={handleInputChange} />
                                   ) : (
-                                    <Col {...valueColProps}>{user.firstName}</Col>
+                                    <Input name="firstName" value={user.firstName} readOnly />
                                   )}
                                 </Form.Item>
                               </Col>
@@ -230,58 +227,76 @@ const Users = () => {
                                   labelCol={labelColProps}
                                 >
                                   {editMode ? (
-                                    <Input name="lastName" onChange={handleInputChange} />
+                                    <Input name="lastName" value={editedUser.lastName} onChange={handleInputChange} />
                                   ) : (
-                                    <Col {...valueColProps}>{user.lastName}</Col>
+                                    <Input name="lastName" value={user.lastName} readOnly />
                                   )}
                                 </Form.Item>
                               </Col>
                             </Row>
-                            <Form.Item
-                              label="Roll No"
-                              name="rollNo"
-                              initialValue={user.rollNo}
-                              labelCol={labelColProps}
-                            >
-                              {editMode ? (
-                                <Input name="rollNo" onChange={handleInputChange} />
-                              ) : (
-                                <Col {...valueColProps}>{user.rollNo}</Col>
-                              )}
-                            </Form.Item>
-                            <Form.Item label="Email" labelCol={labelColProps}>
-                              <Col {...valueColProps}>{user.email}</Col>
-                            </Form.Item>
-                            <Form.Item
-                              label="Phone Number"
-                              name="phoneNumber"
-                              initialValue={user.phoneNumber}
-                              labelCol={labelColProps}
-                            >
-                              {editMode ? (
-                                <Input name="phoneNumber" onChange={handleInputChange} />
-                              ) : (
-                                <Col {...valueColProps}>{user.phoneNumber}</Col>
-                              )}
-                            </Form.Item>
-                            <Form.Item label="Role" labelCol={labelColProps}>
-                              <Col {...valueColProps}>{user.role}</Col>
-                            </Form.Item>
-                            <Form.Item label="University" labelCol={labelColProps}>
-                              <Col {...valueColProps}>{user.university}</Col>
-                            </Form.Item>
-                            <Form.Item
-                              label="Department"
-                              name="department"
-                              initialValue={user.department}
-                              labelCol={labelColProps}
-                            >
-                              {editMode ? (
-                                <Input name="department" onChange={handleInputChange} />
-                              ) : (
-                                <Col {...valueColProps}>{user.department}</Col>
-                              )}
-                            </Form.Item>
+                            <Row gutter={16}>
+                              <Col span={12}>
+                                <Form.Item
+                                  label="Roll No"
+                                  name="rollNo"
+                                  initialValue={user.rollNo}
+                                  labelCol={labelColProps}
+                                >
+                                  {editMode ? (
+                                    <Input name="rollNo" value={editedUser.rollNo} onChange={handleInputChange} />
+                                  ) : (
+                                    <Input name="rollNo" value={user.rollNo} readOnly />
+                                  )}
+                                </Form.Item>
+                              </Col>
+                              <Col span={12}>
+                                <Form.Item label="Email" labelCol={labelColProps}>
+                                  <Input name="email" value={user.email} readOnly />
+                                </Form.Item>
+                              </Col>
+                            </Row>
+                            <Row gutter={16}>
+                              <Col span={12}>
+                                <Form.Item
+                                  label="Phone Number"
+                                  name="phoneNumber"
+                                  initialValue={user.phoneNumber}
+                                  labelCol={labelColProps}
+                                >
+                                  {editMode ? (
+                                    <Input name="phoneNumber" value={editedUser.phoneNumber} onChange={handleInputChange} />
+                                  ) : (
+                                    <Input name="phoneNumber" value={user.phoneNumber} readOnly />
+                                  )}
+                                </Form.Item>
+                              </Col>
+                              <Col span={12}>
+                                <Form.Item label="Role" labelCol={labelColProps}>
+                                  <Input name="role" value={user.role} readOnly />
+                                </Form.Item>
+                              </Col>
+                            </Row>
+                            <Row gutter={16}>
+                              <Col span={12}>
+                                <Form.Item label="University" labelCol={labelColProps}>
+                                  <Input name="university" value={user.university} readOnly />
+                                </Form.Item>
+                              </Col>
+                              <Col span={12}>
+                                <Form.Item
+                                  label="Department"
+                                  name="department"
+                                  initialValue={user.department}
+                                  labelCol={labelColProps}
+                                >
+                                  {editMode ? (
+                                    <Input name="department" value={editedUser.department} onChange={handleInputChange} />
+                                  ) : (
+                                    <Input name="department" value={user.department} readOnly />
+                                  )}
+                                </Form.Item>
+                              </Col>
+                            </Row>
                             <Form.Item>
                               {editMode ? (
                                 <Space>
@@ -363,7 +378,6 @@ const Users = () => {
                         }
                       />
                     )}
-
                   </Card>
                 </div>
               )}

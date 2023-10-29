@@ -7,7 +7,6 @@ import {
   LinkOutlined,
 } from '@ant-design/icons';
 import 'antd/dist/antd';
-import './CSS/Document.css';
 import config from '../../../config';
 
 const apiUrl = config.apiUrl;

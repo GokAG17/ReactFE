@@ -1,14 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import DashboardNavbar from './DashboardNavbar';
+import { Tabs } from 'antd';
+import {
+  FileOutlined,
+  ExclamationCircleOutlined,
+  LinkOutlined,
+} from '@ant-design/icons';
+import 'antd/dist/antd'; 
 import './CSS/Details.css';
+import DashboardNavbar from './DashboardNavbar';
 import config from '../../../config';
 
 const apiUrl = config.apiUrl;
+const { TabPane } = Tabs;
 
-const Details = () => {
+const Dashboard = () => {
   const [students, setStudents] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState(null);
+  const [selectedType, setSelectedType] = useState('formSubmission');
+  const [verifiedLinks, setVerifiedLinks] = useState([]);
   const [formSubmissions, setFormSubmissions] = useState([]);
+  const [selectedLinkType, setSelectedLinkType] = useState('');
 
   useEffect(() => {
     fetchStudents();
@@ -16,11 +27,16 @@ const Details = () => {
 
   useEffect(() => {
     if (selectedStudent) {
-      fetchFormSubmissions(selectedStudent.rollNo);
+      if (selectedType === 'formSubmission') {
+        fetchFormSubmissions(selectedStudent.rollNo);
+      } else if (selectedType === 'linkType') {
+        fetchVerifiedLinks(selectedStudent.rollNo, selectedLinkType);
+      }
     } else {
       setFormSubmissions([]);
+      setVerifiedLinks([]);
     }
-  }, [selectedStudent]);
+  }, [selectedStudent, selectedType, selectedLinkType]);
 
   const fetchStudents = async () => {
     try {
@@ -70,75 +86,132 @@ const Details = () => {
     }
   };
 
-  const handleStudentSelection = (e) => {
-    const selectedRollNo = e.target.value;
+  const fetchVerifiedLinks = async (rollNumber, linkType) => {
+    try {
+      const response = await fetch(
+        `${apiUrl}/api/verifiedlinksubmissions?rollNo=${rollNumber}&linkType=${linkType}`,
+        {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        setVerifiedLinks(data);
+      } else {
+        console.error('Failed to fetch verified links:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error fetching verified links:', error);
+    }
+  };
+
+  const handleStudentSelection = (selectedRollNo) => {
     const selectedStudent = students.find((student) => student.rollNo === selectedRollNo);
     setSelectedStudent(selectedStudent || null);
+    setSelectedLinkType(''); // Reset selectedLinkType when a new student is selected
   };
 
   return (
-    <div className="ddt">
+    <div className="custom-dashboard-container">
       <DashboardNavbar>
-      <div className="ddct">
-        <h2 className="student-titlet">Select a Student</h2>
-        <div className="student-selector-containert">
-          <select className="student-selector" onChange={handleStudentSelection}>
-            <option value="">Select a student</option>
-            {students.map((student) => (
-              <option key={student.rollNo} value={student.rollNo}>
-                {student.firstName} {student.lastName} - {student.rollNo}
-              </option>
-            ))}
-          </select>
-        </div>
-        {selectedStudent && (
-          <div className="student-details-containert">
-            <h3 className="student-details-title">Student Roll No: {selectedStudent.rollNo}</h3>
-            <h3 className="student-details-title">
-              Student Name: {selectedStudent.firstName} {selectedStudent.lastName}
-            </h3>
-          </div>
-        )}
-        <div className="form-submissions-containert">
-          <h3 className="form-submissions-title">Form Submissions:</h3>
-          {formSubmissions.length > 0 ? (
-            <div className="vertical-table">
-              {formSubmissions.map((submission) => (
-                <div key={submission.id} className="vertical-table-row">
-                  <div className="vertical-table-header">Team Members</div>
-                  <div className="vertical-table-data">{`${submission.teamMember1}, ${submission.teamMember2}, ${submission.teamMember3}`}</div>
-
-                  <div className="vertical-table-header">Project Title</div>
-                  <div className="vertical-table-data">{submission.projectTitle}</div>
-
-                  <div className="vertical-table-header">Project Description</div>
-                  <div className="vertical-table-data">{submission.description}</div>
-
-                  <div className="vertical-table-header">Guide Name</div>
-                  <div className="vertical-table-data">{submission.guideName}</div>
-
-                  <div className="vertical-table-header">Guide Roll Number</div>
-                  <div className="vertical-table-data">{submission.guideRollNumber}</div>
-
-                  <div className="vertical-table-header">Guide Department</div>
-                  <div className="vertical-table-data">{submission.guideDepartment}</div>
-
-                  <div className="vertical-table-header">Guide Contact</div>
-                  <div className="vertical-table-data">{submission.guideMobile}</div>
-
-                  <div className="vertical-table-header">Guide Mail</div>
-                  <div className="vertical-table-data">{submission.guideEmail}</div>
-                </div>
+        <div className="custom-dashboard-content">
+          <h2 className="custom-dashboard-title">Details</h2>
+          <div className="custom-student-selector">
+            <label htmlFor="studentSelect" className="custom-label-text">
+              Select a student:
+            </label>
+            <select
+              id="studentSelect"
+              value={selectedStudent ? selectedStudent.rollNo : ''}
+              onChange={(e) => handleStudentSelection(e.target.value)} // Updated this line
+              className="custom-select-box"
+            >
+              <option value="">Select Student</option>
+              {students.map((student) => (
+                <option key={student.rollNo} value={student.rollNo}>
+                  {student.firstName} {student.lastName} ({student.rollNo})
+                </option>
               ))}
-            </div>
-          ) : (
-            <p>No verified form submissions available for this student.</p>
-          )}
+            </select>
+          </div>
+
+          <div className="divd">
+            <Tabs defaultActiveKey="formSubmission" onChange={(key) => setSelectedType(key)}>
+              <TabPane tab="Form Submissions" key="formSubmission">
+                <h3>Form Submissions for {selectedStudent ? selectedStudent.firstName : ''}</h3>
+                {formSubmissions.map((submission) => (
+                  <div className="custom-card" key={submission.projectTitle}>
+                    <h4>
+                      <ExclamationCircleOutlined /> Title: {submission.projectTitle}
+                    </h4>
+                    <p>
+                      <strong>Team Members:</strong>{' '}
+                      {`${submission.teamMember1} (${submission.teamMember1RollNumber}), ${submission.teamMember2} (${submission.teamMember2RollNumber}), ${submission.teamMember3} (${submission.teamMember3RollNumber})`}
+                    </p>
+                    <p>
+                      <strong>Project Description:</strong> {submission.description}
+                    </p>
+                    <p>
+                      <strong>Guide Name:</strong> {submission.guideName}
+                    </p>
+                    <p>
+                      <strong>Guide Roll Number:</strong> {submission.guideRollNumber}
+                    </p>
+                    <p>
+                      <strong>Guide Department:</strong> {submission.guideDepartment}
+                    </p>
+                    <p>
+                      <strong>Guide Contact:</strong> {submission.guideMobile}
+                    </p>
+                    <p>
+                      <strong>Guide Mail:</strong> {submission.guideEmail}
+                    </p>
+                  </div>
+                ))}
+                {formSubmissions.length === 0 && (
+                  <p>No form submissions found for {selectedStudent ? selectedStudent.firstName : ''}</p>
+                )}
+              </TabPane>
+              <TabPane tab="Link Types" key="linkType">
+                <div className="link-type-selector">
+                  <label>Select a link type:</label>
+                  <select
+                    value={selectedLinkType}
+                    onChange={(e) => setSelectedLinkType(e.target.value)}
+                    className="custom-select-box"
+                  >
+                    <option value="">Select Link Type</option>
+                    <option value="report">Report Link</option>
+                    <option value="drive">Drive Link</option>
+                  </select>
+                </div>
+                <h3>Verified Links for {selectedStudent ? selectedStudent.firstName : ''}</h3>
+                {verifiedLinks.map((link, index) => (
+                  <div className="custom-card" key={index}>
+                    <h4>
+                      {link.linkType === 'report' ? <FileOutlined /> : <LinkOutlined />}
+                      {link.linkType}: {link.link}
+                    </h4>
+                    <a href={link.link} target="_blank" rel="noopener noreferrer">
+                      View Link
+                    </a>
+                  </div>
+                ))}
+                {verifiedLinks.length === 0 && (
+                  <p>No verified links found for {selectedStudent ? selectedStudent.firstName : ''}</p>
+                )}
+              </TabPane>
+            </Tabs>
+          </div>
         </div>
-      </div>
       </DashboardNavbar>
     </div>
   );
 };
 
-export default Details;
+export default Dashboard;

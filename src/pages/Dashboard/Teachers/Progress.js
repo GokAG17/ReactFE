@@ -1,46 +1,50 @@
 import React, { useState, useEffect } from 'react';
-import { Progress as AntProgress, Card } from 'antd';
+import { Progress as AntProgress, Steps } from 'antd';
 import 'antd/dist/antd';
 import './CSS/Progress.css'; 
 import config from '../../../config';
 
-const { Meta } = Card;
+const { Step } = Steps;
 const apiUrl = config.apiUrl;
 
 const Progress = ({ studentRollNo }) => {
   const [progressData, setProgressData] = useState([]);
-  const [selectedStudent, setSelectedStudent] = useState(null);
-  const [overallProgress, setOverallProgress] = useState(0);
+  const [currentStep, setCurrentStep] = useState(0);
 
   useEffect(() => {
+    const fetchStudentData = async () => {
+      try {
+        if (studentRollNo) {
+          const response = await fetch(`${apiUrl}/api/accounts?role=Student`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            const student = data.find((student) => student.rollNo === studentRollNo);
+
+            fetchProgressData(student);
+          } else {
+            console.error('Failed to fetch students:', response.status, response.statusText);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching student data:', error);
+      }
+    };
+
     fetchStudentData();
   }, [studentRollNo]);
 
-  const fetchStudentData = async () => {
-    try {
-      if (studentRollNo) {
-        const response = await fetch(`${apiUrl}/api/accounts?role=Student`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          const student = data.find((student) => student.rollNo === studentRollNo);
-          setSelectedStudent(student);
-
-          fetchProgressData(student);
-        } else {
-          console.error('Failed to fetch students:', response.status, response.statusText);
-        }
-      }
-    } catch (error) {
-      console.error('Error fetching student data:', error);
-    }
-  };
+  useEffect(() => {
+    // Calculate the current step based on progressData and update currentStep state
+    const completedSteps = progressData.filter((step) => step.completed).length;
+    setCurrentStep(completedSteps);
+  }, [progressData]);
 
   const fetchProgressData = async (student) => {
     try {
@@ -127,6 +131,7 @@ const Progress = ({ studentRollNo }) => {
 
         console.log('Response from form submission API:',  responseGuideEvaluation);
         
+        
         if (
           responseFormSubmission.ok &&
           responseVerification.ok &&
@@ -137,41 +142,24 @@ const Progress = ({ studentRollNo }) => {
           responseGuideEvaluation.ok
         ) {
           const formSubmissionData = await responseFormSubmission.json();
-          console.log('Form Submission Data:', formSubmissionData);
           const verificationData = await responseVerification.json();
-          console.log('Verification Data:', verificationData);
           const reportSubmissionData = await responseReportSubmission.json();
-          console.log('Verification Data:', reportSubmissionData );
           const reportVerificationData = await responseReportVerification.json();
-          console.log('Verification Data:', reportVerificationData);
           const projectLinkSubmissionData = await responseProjectLinkSubmission.json();
-          console.log('Verification Data:', projectLinkSubmissionData);
           const projectLinkVerificationData = await responseProjectLinkVerification.json();
-          console.log('Verification Data:', projectLinkVerificationData);
           const guideEvaluationData = await responseGuideEvaluation.json();
-          console.log('Verification Data:', guideEvaluationData);
-  
+
           const progressSteps = [
-            { title: 'Form Submission', completed:  formSubmissionData.length > 0 },
+            { title: 'Form Submission', completed: formSubmissionData.length > 0 },
             { title: 'Guide Verification', completed: verificationData.length > 0 },
-            { title: 'Report Link Submission', completed: reportSubmissionData.completed  },
+            { title: 'Report Link Submission', completed: reportSubmissionData.completed },
             { title: 'Report Link Verification', completed: reportVerificationData.verified },
-            { title: 'Project Link Submission', completed: projectLinkSubmissionData.completed  },
+            { title: 'Project Link Submission', completed: projectLinkSubmissionData.completed },
             { title: 'Project Link Verification', completed: projectLinkVerificationData.verified },
             { title: 'Guide Evaluation', completed: guideEvaluationData.completed },
           ];
-  
-          const totalSteps = progressSteps.length;
-          const completedSteps = progressSteps.filter(step => step.completed).length;
-          const calculatedOverallProgress = (completedSteps / totalSteps) * 100;
 
-          console.log('Progress Steps:', progressSteps);
-          console.log('Total Steps:', totalSteps);
-          console.log('Completed Steps:', completedSteps);
-          console.log('Calculated Overall Progress:', calculatedOverallProgress);
-  
           setProgressData(progressSteps);
-          setOverallProgress(calculatedOverallProgress);
         } else {
           console.error('Failed to fetch progress data for one or more steps.');
         }
@@ -181,29 +169,21 @@ const Progress = ({ studentRollNo }) => {
     }
   };
 
-  
-
   return (
     <div className="progress-container">
-      <div className="progress-header">
-        <h4 className="progress-heading">Progress Overview</h4>
-      </div>
-      <div className="progress-items">
-        {progressData.map((item, index) => (
-          <div key={index} className={`progress-item ${item.completed ? 'completed' : 'incomplete'}`}>
-            <AntProgress
-              type="circle"
-              percent={item.completed ? 100 : 0}
-              width={60}
-              format={() => (item.completed ? <i className="fas fa-check-circle"></i> : <i className="fas fa-circle"></i>)}
-            />
-            <p className="progress-title">{item.title}</p>
-          </div>
-        ))}
-      </div>
+      
       <div className="overall-progress">
         <h3>Overall Progress</h3>
-        <AntProgress percent={Math.round(overallProgress)} type="circle" width={250} />
+        <Steps current={currentStep} progressDot>
+          {progressData.map((item, index) => (
+            <Step
+              key={index}
+              title={item.title}
+              description={item.completed ? 'Completed' : 'Incomplete'}
+              status={item.completed ? 'finish' : 'wait'}
+            />
+          ))}
+        </Steps>
       </div>
     </div>
   );

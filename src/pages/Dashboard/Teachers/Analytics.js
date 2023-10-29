@@ -47,7 +47,7 @@ const Analytics = () => {
       setMarks(data);
     } catch (error) {
       console.error('Error fetching marks:', error);
-      setMarks({}); // Set marks to an empty object on error
+      setMarks({}); 
     }
   };
 
@@ -62,17 +62,18 @@ const Analytics = () => {
   };
 
   const chartData = {
-    labels: Object.keys(marks),
+    labels: Object.keys(marks).slice(0, 50), 
     datasets: [
       {
         label: 'Marks',
-        data: Object.values(marks),
+        data: Object.values(marks).slice(0, 50), 
         backgroundColor: 'rgba(75, 192, 192, 0.6)',
         borderColor: 'rgba(75, 192, 192, 1)',
         borderWidth: 1,
       },
     ],
   };
+  
 
   const handleStudentSelection = (value) => {
     setSelectedStudent(value);

@@ -1,162 +1,128 @@
-/* Evaluation.css */
-
-/* Overall container styling */
-.de {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.dec {
-  max-width: 1200px; /* Adjust the maximum width as needed */
-  width: 100%;
-  margin: 20px;
-  padding: 30px; /* Increased padding for better separation */
-  background-color: #f8f8f8; /* Lighter background color */
-  border-radius: 12px; /* Rounded corners for the container */
-  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.15); /* Slightly increased shadow */
-  text-align: center; /* Center content within the container */
-}
-
-/* Heading styling */
-.dec h2 {
-  font-size: 28px; /* Larger font size for the heading */
-  margin-bottom: 30px; /* Increased margin for spacing */
-  color: #333; /* Dark gray text color */
-}
-
-/* Evaluation form container */
-.evaluation-formt {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 30px; /* Increased vertical spacing between elements */
-}
-
-/* Form selection styling */
-.form-selectt {
-  display: flex;
-  flex-direction: column;
-  margin: 15px; /* Increased margin for spacing */
-  align-items: center; /* Center content horizontally within each form-selectt */
-}
-
-.form-selectt label {
-  font-weight: bold;
-  margin-bottom: 10px; /* Increased margin for spacing */
-  color: #555; /* Slightly darker gray text color */
-}
-
-.form-selectt select {
-  width: 250px; /* Increased select box width */
-  padding: 12px; /* Increased padding for better clickability */
-  border: 2px solid #ccc; /* Thicker border for select boxes */
-  border-radius: 6px; /* Rounded corners for select boxes */
-  font-size: 18px; /* Larger font size for select boxes */
-  color: #444; /* Slightly darker gray text color */
-}
-
-/* Student details styling */
-.student-detailst {
-  margin: 30px 0; /* Increased margin for spacing */
-}
-
-.student-detailst div {
-  margin: 10px 0; /* Increased margin for spacing */
-  font-weight: bold;
-  color: #333; /* Dark gray text color */
-}
-
-/* Table styling */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 30px; /* Increased margin for spacing */
-}
-
-th,
-td {
-  border: 2px solid #ccc; /* Thicker borders for table cells */
-  padding: 12px; /* Increased padding for better spacing */
-  text-align: center;
-  font-size: 16px; /* Font size for table cells */
-  color: #444; /* Slightly darker gray text color */
-}
-
-th {
-  background-color: #f2f2f2;
-  font-weight: bold;
-  color: #333; /* Dark gray text color */
-}
-
-/* Input field styling */
-.parameter-input {
-  width: 80px; /* Increased input field width */
-  padding: 10px; /* Increased padding for input fields */
-  border: 2px solid #ccc; /* Thicker borders for input fields */
-  border-radius: 6px; /* Rounded corners for input fields */
-  text-align: center;
-  font-size: 16px; /* Font size for input fields */
-  color: #444; /* Slightly darker gray text color */
-}
-
-/* Total marks container styling */
-.total-marks-containert {
-  display: flex;
-  align-items: center;
-  margin-top: 30px; /* Increased margin for spacing */
-}
-
-.total-marks-label {
-  font-weight: bold;
-  margin-right: 15px; /* Increased margin for spacing */
-  color: #555; /* Slightly darker gray text color */
-}
-
-.total-marks-input {
-  width: 100px; /* Increased input field width */
-  padding: 10px; /* Increased padding for input fields */
-  border: 2px solid #ccc; /* Thicker borders for input fields */
-  border-radius: 6px; /* Rounded corners for input fields */
-  text-align: center;
-  font-size: 16px; /* Font size for input fields */
-  color: #444; /* Slightly darker gray text color */
-}
-
-/* Remarks styling */
-.remarkst {
-  margin-top: 30px; /* Increased margin for spacing */
-  text-align: left; /* Align text within the textarea to the left */
-}
-
-.remarkst p {
-  font-weight: bold;
-  margin-bottom: 10px; /* Increased margin for spacing */
-  color: #555; /* Slightly darker gray text color */
-}
-
-.remarkst textarea {
-  width: 100%;
-  padding: 15px; /* Increased padding for textarea */
-  border: 2px solid #ccc; /* Thicker borders for textarea */
-  border-radius: 6px; /* Rounded corners for textarea */
-  font-size: 18px; /* Larger font size for textarea */
-  resize: vertical;
-  color: #444; /* Slightly darker gray text color */
-}
-
-/* Submit button styling */
-.submit-button {
-  margin-top: 30px; /* Increased margin for spacing */
-  padding: 15px 30px; /* Increased padding for the button */
-  background-color: #007bff;
-  color: #fff; /* White text color */
-  border: none;
-  border-radius: 8px; /* Rounded corners for the button */
-  font-size: 18px; /* Larger font size for the button */
-  cursor: pointer;
-}
-
-.submit-button:hover {
-  background-color: #0056b3;
-}
+/* Apply blue theme to headings and labels */
+.blue-theme {
+    color: blue;
+  }
+  
+  /* Styles for the main container */
+  .de {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh; /* Use min-height for full page coverage */
+    background-color: #f0f0f0;
+    margin: 0; /* Remove default margin */
+  }
+  
+  /* Styles for the content container */
+  .dec {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 1200px;
+    width: 100%;
+  }
+  
+  /* Styles for headings */
+  .dec h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  /* Styles for form elements */
+  .evaluation-formt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px; /* Add margin for separation */
+  }
+  
+  .evaluation-formt select {
+    padding: 8px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 300px;
+    font-size: 16px; /* Increase font size for better readability */
+  }
+  
+  .evaluation-formt table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .evaluation-formt th,
+  .evaluation-formt td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .evaluation-formt .parameter-input {
+    width: 50px;
+  }
+  
+  .evaluation-formt .total-marks-containert {
+    margin-top: 20px;
+  }
+  
+  .evaluation-formt .total-marks-label {
+    font-weight: bold;
+  }
+  
+  .evaluation-formt .total-marks-value {
+    display: inline-block;
+    margin-left: 10px;
+  }
+  
+  .evaluation-formt .total-marks-input {
+    width: 50px;
+  }
+  
+  .evaluation-formt .remarkst {
+    margin-top: 20px;
+    text-align: left;
+  }
+  
+  .evaluation-formt textarea {
+    width: 100%;
+    max-width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+    font-size: 16px; /* Increase font size for better readability */
+  }
+  
+  .evaluation-formt .submit-button {
+    margin-top: 20px;
+    background-color: blue;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease; /* Add transition for hover effect */
+  }
+  
+  .evaluation-formt .submit-button:hover {
+    background-color: #0070e0; /* Change color on hover */
+  }
+  
+  /* Toast container styles */
+  .Toastify__toast-container {
+    position: fixed; /* Fixed position for toast container */
+    top: 20px; /* Adjust top position as needed */
+    right: 20px; /* Adjust right position as needed */
+    padding: 10px;
+  }
+  
+  .Toastify__toast {
+    margin-top: 10px;
+  }
+  

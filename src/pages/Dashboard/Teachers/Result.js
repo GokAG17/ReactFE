@@ -1,9 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Select, Input, Button, Row, Col, Typography, message } from 'antd';
 import DashboardNavbar from './DashboardNavbar';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './CSS/Result.css';
 import config from '../../../config';
+
+const { Option } = Select;
+const { Title, Paragraph } = Typography;
 
 const apiUrl = config.apiUrl;
 
@@ -19,13 +23,13 @@ const Result = () => {
     firstReview: 0.25,
     secondReview: 0.25,
     thirdReview: 0.25,
-    guideReview: 0.25
+    guideReview: 0.25,
   });
 
   const fetchStudents = async () => {
     try {
       const response = await fetch(`${apiUrl}/api/accounts?role=Student`, {
-        credentials: 'include'
+        credentials: 'include',
       });
 
       if (response.ok) {
@@ -65,13 +69,13 @@ const Result = () => {
       const fetchGuideMarks = async (studentRollNo) => {
         try {
           const response = await fetch(`${apiUrl}/api/formsguidemarkstaff?rollNo=${studentRollNo}`, {
-            credentials: 'include'
+            credentials: 'include',
           });
 
           if (response.ok) {
             const guideMarksData = await response.json();
             setGuideMarks(guideMarksData);
-            return guideMarksData
+            return guideMarksData;
           } else {
             console.error('Failed to fetch guide marks:', response.status, response.statusText);
           }
@@ -82,38 +86,28 @@ const Result = () => {
 
       if (selectedStudentRollNo) {
         console.log(`Fetching marks for student rollNo: ${selectedStudentRollNo}`);
-        const [
-          firstMarks,
-          secondMarks,
-          thirdMarks,
-          guideMarksData
-        ] = await Promise.all([
+        const [firstMarks, secondMarks, thirdMarks, guideMarksData] = await Promise.all([
           fetchReviewMarks('First', selectedStudentRollNo),
           fetchReviewMarks('Second', selectedStudentRollNo),
           fetchReviewMarks('Third', selectedStudentRollNo),
-          fetchGuideMarks(selectedStudentRollNo)
-          
+          fetchGuideMarks(selectedStudentRollNo),
         ]);
         console.log('First Marks:', firstMarks);
         console.log('Second Marks:', secondMarks);
         console.log('Third Marks:', thirdMarks);
         console.log('Guide Marks Data:', guideMarksData);
-        
-        const calculatedMarks = calculateWeightedAverage(
-          [firstMarks, secondMarks, thirdMarks, guideMarksData],
-          weightage
-        );
 
-        console.log('Guide mark',guideMarksData);
+        const calculatedMarks = calculateWeightedAverage([firstMarks, secondMarks, thirdMarks, guideMarksData], weightage);
+
+        console.log('Guide mark', guideMarksData);
 
         setFirstReviewMarks(firstMarks);
         setSecondReviewMarks(secondMarks);
         setThirdReviewMarks(thirdMarks);
-        
-        setAverageTotalMarks(calculatedMarks);
-        console.log('Total marks obtained',calculatedMarks);
-      }
 
+        setAverageTotalMarks(calculatedMarks);
+        console.log('Total marks obtained', calculatedMarks);
+      }
     } catch (error) {
       console.error('Error fetching marks:', error);
     }
@@ -124,20 +118,19 @@ const Result = () => {
     let totalWeightage = 0;
 
     marksArray.forEach((marks, index) => {
-      console.log('Marks:', marks); 
+      console.log('Marks:', marks);
       const reviewType = Object.keys(weightage)[index];
       const reviewWeightage = weightage[reviewType];
 
       if (marks && marks.calculatedTotalMarks !== undefined) {
         weightedSum += marks.calculatedTotalMarks * reviewWeightage;
-        console.log('Weighted Sum:', weightedSum); 
+        console.log('Weighted Sum:', weightedSum);
         totalWeightage += reviewWeightage;
         console.log('Total Weightage Sum:', totalWeightage);
       }
     });
 
-
-    console.log('Weighted Sum:', weightedSum); // Add this line
+    console.log('Weighted Sum:', weightedSum);
     console.log('Total Weightage Sum:', totalWeightage);
 
     if (totalWeightage === 0) {
@@ -147,16 +140,15 @@ const Result = () => {
     return weightedSum / totalWeightage;
   };
 
-
   const setWeightageOnServer = async () => {
     try {
       await fetch(`${apiUrl}/api/set-weightage`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify(weightage)
+        body: JSON.stringify(weightage),
       });
       console.log('Weightage set successfully');
     } catch (error) {
@@ -170,9 +162,8 @@ const Result = () => {
 
   const calculateMarksAndSave = async () => {
     if (selectedStudentRollNo) {
-      await fetchMarks(); // Ensure data is up-to-date before sending
+      await fetchMarks();
 
-      // Check if data already exists for the selected student
       const response = await fetch(`${apiUrl}/api/exists-marks?studentRollNo=${selectedStudentRollNo}`, {
         method: 'GET',
         credentials: 'include',
@@ -182,7 +173,6 @@ const Result = () => {
         const { exists } = await response.json();
 
         if (exists) {
-          // Data exists, update the existing record
           try {
             const response = await fetch(`${apiUrl}/api/update-marks`, {
               method: 'PUT',
@@ -201,15 +191,14 @@ const Result = () => {
             });
 
             if (response.ok) {
-              toast.success('Marks updated successfully');
+              message.success('Marks updated successfully');
             } else {
-              toast.error('Failed to update marks');
+              message.error('Failed to update marks');
             }
           } catch (error) {
             console.error('Error updating marks:', error);
           }
         } else {
-          // Data does not exist, create a new record
           try {
             const response = await fetch(`${apiUrl}/api/save-marks`, {
               method: 'POST',
@@ -228,9 +217,9 @@ const Result = () => {
             });
 
             if (response.ok) {
-              toast.success('Marks saved successfully');
+              message.success('Marks saved successfully');
             } else {
-              toast.error('Failed to save marks');
+              message.error('Failed to save marks');
             }
           } catch (error) {
             console.error('Error saving marks:', error);
@@ -242,10 +231,8 @@ const Result = () => {
     }
   };
 
-
-
-  const handleStudentChange = (event) => {
-    setSelectedStudentRollNo(event.target.value);
+  const handleStudentChange = (value) => {
+    setSelectedStudentRollNo(value);
   };
 
   useEffect(() => {
@@ -255,84 +242,118 @@ const Result = () => {
   }, [selectedStudentRollNo, fetchMarks]);
 
   const handleWeightageChange = (reviewType, value) => {
-    setWeightage(prevWeightage => ({
+    setWeightage((prevWeightage) => ({
       ...prevWeightage,
-      [reviewType]: parseFloat(value)
+      [reviewType]: parseFloat(value),
     }));
   };
 
   return (
-    <div className="dr">
-      <DashboardNavbar>
-      <div className="drc">
-        <h2 className="result-heading">Result</h2>
-        <div className="student-rollno">
-          <label>Select Student Roll No:</label>
-          <select value={selectedStudentRollNo} onChange={handleStudentChange}>
-            <option value="">Select a student</option>
-            {students.map(student => (
-              <option key={student.rollNo} value={student.rollNo}>
-                {student.rollNo}
-              </option>
-            ))}
-          </select>
-        </div>
-        {averageTotalMarks !== null ? (
-          <div className="result">
-            <p className="average-marks"> Total Marks: {averageTotalMarks.toFixed(2)}</p>
-          </div>
-        ) : (
-          <p className="loading">Loading...</p>
-        )}
-        <div className="review-marks">
-          <h3>Review Marks</h3>
-          <p>First Review: {firstReviewMarks && firstReviewMarks.calculatedTotalMarks !== undefined ? firstReviewMarks.calculatedTotalMarks : 'N/A'}</p>
-          <p>Second Review: {secondReviewMarks && secondReviewMarks.calculatedTotalMarks !== undefined ? secondReviewMarks.calculatedTotalMarks : 'N/A'}</p>
-          <p>Third Review: {thirdReviewMarks && thirdReviewMarks.calculatedTotalMarks !== undefined ? thirdReviewMarks.calculatedTotalMarks : 'N/A'}</p>
-          {console.log("guideeeee: ", guideMarks)}
-          <p>Guide Marks: {guideMarks && guideMarks.calculatedTotalMarks !== undefined ? guideMarks.calculatedTotalMarks : 'N/A'}</p>
-        </div>
-        <div className="weightage-inputs">
-          <h3>Weightage</h3>
-          <div className="weightage-input">
-            <label>First Review:</label>
-            <input
-              type="number"
-              value={weightage.firstReview}
-              onChange={e => handleWeightageChange('firstReview', e.target.value)}
+    <DashboardNavbar>
+      <div className="dr">
+        <Row justify="center" align="middle" style={{ minHeight: '100vh' }}>
+          <Col span={24}>
+            <Title level={2} className="result-heading">
+              Result
+            </Title>
+            <div className="student-rollno">
+              <Paragraph>Select Student Roll No:</Paragraph>
+              <Select
+                value={selectedStudentRollNo}
+                onChange={handleStudentChange}
+                style={{ width: 200 }}
+              >
+                <Option value="">Select a student</Option>
+                {students.map((student) => (
+                  <Option key={student.rollNo} value={student.rollNo}>
+                    {student.rollNo}
+                  </Option>
+                ))}
+              </Select>
+            </div>
+            <div className="total-marks-container">
+              {averageTotalMarks !== null ? (
+                <div className="total-marks">
+                  <Paragraph className="total-marks-label">Total Marks:</Paragraph>
+                  <Title level={3} className="average-marks">
+                    {averageTotalMarks.toFixed(2)}
+                  </Title>
+                </div>
+              ) : (
+                <Paragraph className="loading">Loading...</Paragraph>
+              )}
+            </div>
+            <div className="review-marks">
+              <Title level={3}>Review Marks</Title>
+              <Paragraph>
+                First Review: {firstReviewMarks && firstReviewMarks.calculatedTotalMarks !== undefined ? firstReviewMarks.calculatedTotalMarks : 'N/A'}
+              </Paragraph>
+              <Paragraph>
+                Second Review: {secondReviewMarks && secondReviewMarks.calculatedTotalMarks !== undefined ? secondReviewMarks.calculatedTotalMarks : 'N/A'}
+              </Paragraph>
+              <Paragraph>
+                Third Review: {thirdReviewMarks && thirdReviewMarks.calculatedTotalMarks !== undefined ? thirdReviewMarks.calculatedTotalMarks : 'N/A'}
+              </Paragraph>
+              <Paragraph>
+                Guide Marks: {guideMarks && guideMarks.calculatedTotalMarks !== undefined ? guideMarks.calculatedTotalMarks : 'N/A'}
+              </Paragraph>
+            </div>
+            <div className="weightage-inputs">
+              <Title level={3}>Weightage</Title>
+              <div className="weightage-input">
+                <Paragraph>First Review:</Paragraph>
+                <Input
+                  type="number"
+                  value={weightage.firstReview}
+                  onChange={(e) => handleWeightageChange('firstReview', e.target.value)}
+                />
+              </div>
+              <div className="weightage-input">
+                <Paragraph>Second Review:</Paragraph>
+                <Input
+                  type="number"
+                  value={weightage.secondReview}
+                  onChange={(e) => handleWeightageChange('secondReview', e.target.value)}
+                />
+              </div>
+              <div className="weightage-input">
+                <Paragraph>Third Review:</Paragraph>
+                <Input
+                  type="number"
+                  value={weightage.thirdReview}
+                  onChange={(e) => handleWeightageChange('thirdReview', e.target.value)}
+                />
+              </div>
+              <div className="weightage-input">
+                <Paragraph>Guide Marks:</Paragraph>
+                <Input
+                  type="number"
+                  value={weightage.guideReview}
+                  onChange={(e) => handleWeightageChange('guideReview', e.target.value)}
+                />
+              </div>
+              <Button onClick={setWeightageOnServer} type="primary">
+                Set Weightage
+              </Button>
+              <Button onClick={calculateMarksAndSave} type="primary">
+                Calculate Marks and Save
+              </Button>
+            </div>
+            <ToastContainer
+              position="top-right"
+              autoClose={5000}
+              hideProgressBar
+              newestOnTop
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
             />
-          </div>
-          <div className="weightage-input">
-            <label>Second Review:</label>
-            <input
-              type="number"
-              value={weightage.secondReview}
-              onChange={e => handleWeightageChange('secondReview', e.target.value)}
-            />
-          </div>
-          <div className="weightage-input">
-            <label>Third Review:</label>
-            <input
-              type="number"
-              value={weightage.thirdReview}
-              onChange={e => handleWeightageChange('thirdReview', e.target.value)}
-            />
-          </div>
-          <div className="weightage-input">
-            <label>Guide Marks:</label>
-            <input
-              type="number"
-              value={weightage.guideReview}
-              onChange={e => handleWeightageChange('guideReview', e.target.value)}
-            />
-          </div>
-          <button onClick={setWeightageOnServer}>Set Weightage</button>
-          <button onClick={calculateMarksAndSave}>Calculate Marks and Save</button>
-        </div>
-        <ToastContainer position="top-right" autoClose={5000} hideProgressBar newestOnTop closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
+          </Col>
+        </Row>
       </div>
-      </DashboardNavbar>
-    </div>
+    </DashboardNavbar>
   );
 };
 

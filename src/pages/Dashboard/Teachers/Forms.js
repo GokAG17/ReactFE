@@ -5,24 +5,40 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './CSS/Forms.css';
 import config from '../../../config';
+import {
+  Layout,
+  Typography,
+  Form,
+  Select,
+  Switch,
+  Button,
+  Input,
+  Card,
+  Row,
+  Col,
+} from 'antd';
+
+const { Content } = Layout;
+const { Option } = Select;
+const { Title, Paragraph } = Typography;
 
 const apiUrl = config.apiUrl;
 
 const Forms = () => {
   const [createForm, setCreateForm] = useState(false);
-  const [selectedReviewType, setSelectedReviewType] = useState('First Review'); // Default to First Review
+  const [selectedReviewType, setSelectedReviewType] = useState('First Review'); 
   const navigate = useNavigate();
 
   const handleCreateFormToggle = () => {
     setCreateForm(!createForm);
   };
 
-  const handleReviewTypeChange = (e) => {
-    setSelectedReviewType(e.target.value);
+  const handleReviewTypeChange = (value) => {
+    setSelectedReviewType(value);
   };
+  
 
   const handleFormSubmit = async (formData) => {
-    // Include the selected review type in the form data
     formData.reviewType = selectedReviewType;
 
     try {
@@ -38,62 +54,55 @@ const Forms = () => {
       const data = await response.json();
       console.log('Form saved:', data);
 
-      // Show success notification
+
       toast.success('Form created successfully!');
 
-      // Reset the createForm state
       setCreateForm(false);
 
-      // Navigate to the evaluation page with the form data as a query parameter
       navigate('/evaluationt', { state: { formData } });
     } catch (error) {
       console.error('Error saving form:', error);
 
-      // Show error notification
       toast.error('Failed to create form');
     }
   };
   return (
-    <div className="dft">
+    <Layout style={{ minHeight: '100vh' }}>
       <DashboardNavbar>
-        <div className="dfct">
-          <div className="form-switch-containertf">
-            <label htmlFor="review-type-select" className="custom-label">
-              Select Review Type:
-            </label>
-            <select
-              id="review-type-select"
-              value={selectedReviewType}
-              onChange={handleReviewTypeChange}
-              disabled={createForm}
-              className="custom-select"
-            >
-              <option value="">Select</option>
-              <option value="First">First Review</option>
-              <option value="Second">Second Review</option>
-              <option value="Third">Third Review</option>
-            </select>
-            <label htmlFor="create-form-switch" className="custom-label form-switch-labelt">
-              Create New Form
-            </label>
-            <input
-              id="create-form-switch"
-              type="checkbox"
-              className="form-switch-input custom-checkbox"
-              checked={createForm}
-              onChange={handleCreateFormToggle}
-            />
+        <Content style={{ padding: '24px' }}>
+          <div className="dft">
+            <Card title="Form Options" style={{ width: 400 }}>
+              <Form layout="vertical">
+                <Form.Item label="Select Review Type">
+                  <Select
+                    value={selectedReviewType}
+                    onChange={handleReviewTypeChange}
+                    disabled={createForm}
+                  >
+                    <Option value="">Select</Option>
+                    <Option value="First">First Review</Option>
+                    <Option value="Second">Second Review</Option>
+                    <Option value="Third">Third Review</Option>
+                  </Select>
+                </Form.Item>
+                <Form.Item label="Create New Form">
+                  <Switch
+                    checked={createForm}
+                    onChange={handleCreateFormToggle}
+                  />
+                </Form.Item>
+              </Form>
+            </Card>
+            {createForm ? (
+              <FormBuilder onSubmit={handleFormSubmit} />
+            ) : (
+              <DataTable />
+            )}
           </div>
-          {createForm ? (
-            <FormBuilder onSubmit={handleFormSubmit} />
-          ) : (
-            <DataTable />
-          )}
-        </div>
-        <ToastContainer />
+        </Content>
+       <ToastContainer />
       </DashboardNavbar>
-    </div>
-
+    </Layout>
   );
 };
 
@@ -101,7 +110,7 @@ const FormBuilder = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
     formTitle: '',
     formParameters: [],
-    overallTotalMarks: 0, // Initialize the overallTotalMarks field to 0
+    overallTotalMarks: 0, 
   });
 
   const handleInputChange = (e) => {
@@ -114,7 +123,6 @@ const FormBuilder = ({ onSubmit }) => {
     updatedParameters[index] = parameterData;
     setFormData((prevData) => ({ ...prevData, formParameters: updatedParameters }));
 
-    // Recalculate the overallTotalMarks when a parameter is changed
     const overallTotalMarks = updatedParameters.reduce(
       (total, parameter) => total + parameter.parameterTotalMarks,
       0
@@ -138,7 +146,6 @@ const FormBuilder = ({ onSubmit }) => {
     const updatedParameters = [...formData.formParameters];
     updatedParameters.splice(index, 1);
 
-    // Recalculate the overallTotalMarks when a parameter is removed
     const overallTotalMarks = updatedParameters.reduce(
       (total, parameter) => total + parameter.parameterTotalMarks,
       0
@@ -171,7 +178,6 @@ const FormBuilder = ({ onSubmit }) => {
     updatedSubParameters.splice(subParameterIndex, 1);
     updatedParameters[parameterIndex].subParameters = updatedSubParameters;
 
-    // Calculate the total marks for the parameter based on given marks for each sub-parameter
     let totalMarks = 0;
     updatedSubParameters.forEach((subParameter) => {
       if (!isNaN(subParameter.subParameterMaxMarks)) {
@@ -179,10 +185,8 @@ const FormBuilder = ({ onSubmit }) => {
       }
     });
 
-    // Update the total marks for the parameter
     updatedParameters[parameterIndex].parameterTotalMarks = totalMarks;
 
-    // Recalculate the overallTotalMarks when a subparameter is removed
     const overallTotalMarks = updatedParameters.reduce(
       (total, parameter) => total + parameter.parameterTotalMarks,
       0
@@ -201,7 +205,6 @@ const FormBuilder = ({ onSubmit }) => {
     updatedSubParameters[subParameterIndex] = subParameterData;
     updatedParameters[parameterIndex].subParameters = updatedSubParameters;
 
-    // Calculate the total marks for the parameter based on given marks for each sub-parameter
     let totalMarks = 0;
     updatedSubParameters.forEach((subParameter) => {
       if (!isNaN(subParameter.subParameterMaxMarks)) {
@@ -209,10 +212,8 @@ const FormBuilder = ({ onSubmit }) => {
       }
     });
 
-    // Update the total marks for the parameter
     updatedParameters[parameterIndex].parameterTotalMarks = totalMarks;
 
-    // Recalculate the overallTotalMarks when a subparameter is changed
     const overallTotalMarks = updatedParameters.reduce(
       (total, parameter) => total + parameter.parameterTotalMarks,
       0
@@ -227,7 +228,7 @@ const FormBuilder = ({ onSubmit }) => {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    // Call the onSubmit callback with the form data
+
     onSubmit(formData);
   };
 
@@ -269,7 +270,7 @@ const FormBuilder = ({ onSubmit }) => {
             id="overall-total-marks-input"
             name="overallTotalMarks"
             value={formData.overallTotalMarks || ''}
-            readOnly // Disable editing of the overall total marks input field
+            readOnly 
           />
         </div>
         <button type="button" className="add-parameter-buttontf" onClick={handleAddParameter}>
@@ -319,7 +320,7 @@ const ParameterField = ({ index, parameter, onParameterChange, onAddSubParameter
           id={`parameter-total-marks-input-${index}`}
           name="parameterTotalMarks"
           value={parameter.parameterTotalMarks || ''}
-          readOnly // Disable editing of the total marks input field
+          readOnly 
         />
       </div>
       <button type="button" className="add-sub-parameter-buttontf" onClick={() => onAddSubParameter(index)}>
@@ -336,35 +337,45 @@ const SubParameterField = ({ parameterIndex, subParameterIndex, subParameter, on
   };
 
   return (
-    <div className="sub-parameter-fieldtf">
-      <label htmlFor={`subparameter-name-input-${parameterIndex}-${subParameterIndex}`}>Sub Parameter Name:</label>
-      <input
-        type="text"
-        id={`subparameter-name-input-${parameterIndex}-${subParameterIndex}`}
-        name="subParameterName"
-        value={subParameter.subParameterName}
-        onChange={handleSubParameterChange}
-      />
-      <label htmlFor={`subparameter-max-marks-input-${parameterIndex}-${subParameterIndex}`}>Max Marks:</label>
-      <input
-        type="number"
-        id={`subparameter-max-marks-input-${parameterIndex}-${subParameterIndex}`}
-        name="subParameterMaxMarks"
-        value={subParameter.subParameterMaxMarks}
-        onChange={handleSubParameterChange}
-      />
-      <label htmlFor={`subparameter-given-marks-input-${parameterIndex}-${subParameterIndex}`}>Given Marks:</label>
-      <input
-        type="number"
-        id={`subparameter-given-marks-input-${parameterIndex}-${subParameterIndex}`}
-        name="subParameterGivenMarks"
-        value={subParameter.subParameterGivenMarks}
-        onChange={handleSubParameterChange}
-      />
-      <button type="button" className="remove-sub-parameter-button" onClick={() => onRemoveSubParameter(parameterIndex, subParameterIndex)}>
-        Remove Sub Parameter
-      </button>
-    </div>
+    <Form>
+      <Row gutter={16}>
+        <Col span={6}>
+          <Form.Item label={`Sub Parameter Name`}>
+            <Input
+              type="text"
+              name="subParameterName"
+              value={subParameter.subParameterName}
+              onChange={handleSubParameterChange}
+            />
+          </Form.Item>
+        </Col>
+        <Col span={6}>
+          <Form.Item label={`Max Marks`}>
+            <Input
+              type="number"
+              name="subParameterMaxMarks"
+              value={subParameter.subParameterMaxMarks}
+              onChange={handleSubParameterChange}
+            />
+          </Form.Item>
+        </Col>
+        <Col span={6}>
+          <Form.Item label={`Given Marks`}>
+            <Input
+              type="number"
+              name="subParameterGivenMarks"
+              value={subParameter.subParameterGivenMarks}
+              onChange={handleSubParameterChange}
+            />
+          </Form.Item>
+        </Col>
+        <Col span={6}>
+          <Button type="danger" onClick={() => onRemoveSubParameter(parameterIndex, subParameterIndex)}>
+            Remove Sub Parameter
+          </Button>
+        </Col>
+      </Row>
+    </Form>
   );
 };
 
@@ -372,12 +383,22 @@ const DataTable = () => {
   // Render table with data fetched from the backend database
   return (
     <div className="data-table">
-      <h2>Form Data Table Creation</h2>
-      <p className="form-description">Create New Form: By toggling the "Create New Form" switch, users can start building a new evaluation form. When the switch is turned on, it reveals a dynamic form creation interface.</p>
-      <p className="form-description">Add Parameters: Within the form creation interface, users can add multiple evaluation parameters. Each parameter consists of a "Parameter Title" field. Users can click the "Add Parameter" button to include additional parameters as needed.</p>
-      <p className="form-description">Add Sub-Parameters: For each parameter, users can add sub-parameters, if required. Sub-parameters have attributes like "Sub Parameter Name," "Max Marks," and "Given Marks." Sub-parameters are useful for breaking down complex evaluation criteria into smaller components.</p>
-      <p className="form-description">Overall Total Marks Calculation: The system automatically calculates and displays the overall total marks based on the sub-parameter input values. This ensures that users can see the total possible marks for the entire form.</p>
-      <p className="form-description">Form Title: Users must provide a title for the form.</p>
+      <Title level={2}>Form Data Table Creation</Title>
+      <Paragraph className="form-description">
+        <strong>Create New Form:</strong> By toggling the "Create New Form" switch, users can start building a new evaluation form. When the switch is turned on, it reveals a dynamic form creation interface.
+      </Paragraph>
+      <Paragraph className="form-description">
+        <strong>Add Parameters:</strong> Within the form creation interface, users can add multiple evaluation parameters. Each parameter consists of a "Parameter Title" field. Users can click the "Add Parameter" button to include additional parameters as needed.
+      </Paragraph>
+      <Paragraph className="form-description">
+        <strong>Add Sub-Parameters:</strong> For each parameter, users can add sub-parameters, if required. Sub-parameters have attributes like "Sub Parameter Name," "Max Marks," and "Given Marks." Sub-parameters are useful for breaking down complex evaluation criteria into smaller components.
+      </Paragraph>
+      <Paragraph className="form-description">
+        <strong>Overall Total Marks Calculation:</strong> The system automatically calculates and displays the overall total marks based on the sub-parameter input values. This ensures that users can see the total possible marks for the entire form.
+      </Paragraph>
+      <Paragraph className="form-description">
+        <strong>Form Title:</strong> Users must provide a title for the form.
+      </Paragraph>
     </div>
   );
 };

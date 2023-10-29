@@ -45,9 +45,6 @@ const LoginForm = () => {
         };
         document.cookie = `loggedIn=${rollNo}; ${Object.entries(cookieOptions).map(([value, key]) => `${key}=${value}`).join('; ')}`;
 
-  
-
-        // Redirect based on the user's role
         if (role === 'Student') {
           navigate('/dashboards');
         } else if (role === 'Panel') {
@@ -58,10 +55,8 @@ const LoginForm = () => {
           navigate('/dashboardg');
         }
 
-        // Show success notification
         toast.success('Login successful!');
       } else {
-        // Invalid credentials
         toast.error('Invalid email, password, or roll number');
       }
     } catch (error) {
@@ -71,10 +66,7 @@ const LoginForm = () => {
     }
   };
 
-  const handleForgotPassword = () => {
-    // Add your "Forgot Password" logic here
-    console.log('Forgot Password clicked');
-  };
+  
 
   return (
     <div className="login-container">
@@ -128,9 +120,7 @@ const LoginForm = () => {
           </div>
         </form>
         <p className="center-text">
-          <a href="/forgot-password" onClick={handleForgotPassword}>
-            Forgot Password?
-          </a>
+        
         </p>
       </div>
       <ToastContainer />

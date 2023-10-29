@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import DashboardNavbar from './DashboardNavbar';
 import { Calendar as BigCalendar, momentLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import 'antd/dist/antd'; // Import Ant Design styles
+import 'antd/dist/antd'; 
 import moment from 'moment';
 import { getCookie } from './cookie';
 import config from '../../../config';
@@ -19,12 +19,13 @@ const Calendar = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [displayType, setDisplayType] = useState('both'); // Default to display both events and slots
+  const [displayType, setDisplayType] = useState('both');
 
   useEffect(() => {
     fetchCurrentUser();
     fetchEvents();
     fetchBookedSlots();
+    fetchGuideEvents();
   }, []);
 
   const fetchCurrentUser = async () => {
@@ -75,7 +76,7 @@ const Calendar = () => {
     fetch(`${apiUrl}/api/booked-slots`, {
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application.json',
       },
       credentials: 'include',
     })
@@ -83,16 +84,48 @@ const Calendar = () => {
       .then(data => {
         const slotsWithDateObjects = data.map(slot => ({
           ...slot,
-          title: 'Project Review', // Set the default title to 'Project Review'
+          title: 'Project Review',
           start: moment(slot.date + ' ' + slot.startTime, 'YYYY-MM-DD HH:mm:ss').toDate(),
           end: moment(slot.date + ' ' + slot.endTime, 'YYYY-MM-DD HH:mm:ss').toDate(),
           type: 'slot',
-          guide: slot.guide, // Add guide name
-          members: slot.members.join(', '), // Join team members as a string
+          guide: slot.guide,
+          members: slot.members.join(', '),
         }));
         setEvents(prevEvents => [...prevEvents, ...slotsWithDateObjects]);
       })
       .catch(error => console.error('Error fetching booked slots:', error));
+  };
+
+  const fetchGuideEvents = async () => {
+    const guideRollNo = getCookie('loggedIn');
+
+    try {
+      const guideEventsResponse = await fetch(`${apiUrl}/api/guide-events?guideRollNo=${guideRollNo}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      });
+
+      if (guideEventsResponse.ok) {
+        const guideEventsData = await guideEventsResponse.json();
+
+        // Convert guide events to calendar events
+        const guideEventsWithDateObjects = guideEventsData.map(event => ({
+          ...event,
+          start: new Date(event.start),
+          end: new Date(event.end),
+          type: 'guideEvent',
+        }));
+
+        setEvents(prevEvents => [...prevEvents, ...guideEventsWithDateObjects]);
+      } else {
+        console.error('Error fetching guide events:', guideEventsResponse.statusText);
+      }
+    } catch (error) {
+      console.error('Error fetching guide events:', error);
+    }
   };
 
   const customEventComponent = ({ event }) => (
@@ -145,7 +178,6 @@ const Calendar = () => {
   };
 
   const handleDeleteSlot = (slotId) => {
-    // Update the URL to match the server route for deleting booked slots
     fetch(`${apiUrl}/api/booked-slots/${slotId}`, {
       method: 'DELETE',
       headers: {
@@ -155,7 +187,6 @@ const Calendar = () => {
     })
       .then(response => {
         if (response.ok) {
-          // Update the state and close the modal if deletion is successful
           setEvents(events.filter(e => e.id !== slotId));
           setSelectedEvent(null);
           setIsModalOpen(false);
@@ -168,43 +199,38 @@ const Calendar = () => {
       });
   };
 
-  const handleEventResize = (eventResizeInfo) => {
-    if (currentUser && (currentUser.role === 'Guide' || currentUser.role === 'teacher')) {
-      const eventToUpdate = {
-        id: eventResizeInfo.event.id,
-        start: eventResizeInfo.start,
-        end: eventResizeInfo.end,
-      };
-
-      fetch(`${apiUrl}/api/events/${eventToUpdate.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(eventToUpdate),
+  const handleDeleteGuideEvent = (eventId) => {
+    fetch(`${apiUrl}/api/guide-events/${eventId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    })
+      .then(response => {
+        if (response.ok) {
+          setEvents(events.filter(e => e.id !== eventId));
+          setSelectedEvent(null);
+          setIsModalOpen(false);
+        } else {
+          console.error('Error deleting guide event:', response.status, response.statusText);
+        }
       })
-        .then(response => {
-          if (response.ok) {
-            setEvents(events.map(e => (e.id === eventToUpdate.id ? eventToUpdate : e)));
-          } else {
-            console.error('Error updating event:', response.status, response.statusText);
-          }
-        })
-        .catch(error => console.error('Error updating event:', error));
-    }
+      .catch(error => {
+        console.error('Error deleting guide event:', error);
+      });
   };
 
   const eventSlotStyle = (event) => {
     if (event.type === 'event') {
       return {
         backgroundColor: '#3174ad',
-        color: 'white', // Text color for events
+        color: 'white',
       };
     } else if (event.type === 'slot') {
       return {
         backgroundColor: '#f0ad4e',
-        color: 'black', // Text color for slots
+        color: 'black',
       };
     }
     return {};
@@ -214,7 +240,6 @@ const Calendar = () => {
     setDisplayType(value);
   };
 
-  // Filter events based on displayType
   const filteredEvents = displayType === 'both' ? events : events.filter(event => event.type === displayType);
 
   return (
@@ -238,7 +263,7 @@ const Calendar = () => {
             events={filteredEvents}
             startAccessor="start"
             endAccessor="end"
-            views={['month', 'week', 'day', 'agenda']} // Include 'agenda' view
+            views={['month', 'week', 'day', 'agenda']}
             style={{ height: 500, width: '95%' }}
             selectable
             resizable
@@ -251,7 +276,6 @@ const Calendar = () => {
                 `${local.format(start, 'YYYY-MM-DD h:mm A', culture)} - ${local.format(end, 'YYYY-MM-DD h:mm A', culture)}`,
             }}
             onSelectEvent={handleEventClick}
-            onEventResize={handleEventResize}
             eventPropGetter={eventSlotStyle}
           />
         </div>
@@ -260,25 +284,27 @@ const Calendar = () => {
             visible={isModalOpen}
             onCancel={() => setIsModalOpen(false)}
             footer={[
-              <Button key="close" onClick={() => setIsModalOpen(false )}>
+              <Button key="close" onClick={() => setIsModalOpen(false)}>
                 Close
               </Button>,
               currentUser &&
-                (currentUser.role === 'Guide' || currentUser.role === 'Panel') && (
-                  <Button
-                    key="delete"
-                    type="danger"
-                    onClick={() => {
-                      if (selectedEvent.type === 'event') {
-                        handleDeleteEvent(selectedEvent.id);
-                      } else if (selectedEvent.type === 'slot') {
-                        handleDeleteSlot(selectedEvent.id);
-                      }
-                    }}
-                  >
-                    Delete
-                  </Button>
-                ),
+              (currentUser.role === 'Guide' || currentUser.role === 'Panel') && (
+                <Button
+                  key="delete"
+                  type="danger"
+                  onClick={() => {
+                    if (selectedEvent.type === 'event') {
+                      handleDeleteEvent(selectedEvent.id);
+                    } else if (selectedEvent.type === 'slot') {
+                      handleDeleteSlot(selectedEvent.id);
+                    } else if (selectedEvent.type === 'guideEvent') {
+                      handleDeleteGuideEvent(selectedEvent.id);
+                    }
+                  }}
+                >
+                  Delete
+                </Button>
+              ),
             ]}
           >
             <p>{selectedEvent.title}</p>

@@ -112,7 +112,7 @@ const Detailss = () => {
       <DashboardNavbar>
       <div className="dcr">
         <div className="form-detailsr">
-          <h2>Form Submission Details</h2>
+          <h2>Review Details</h2>
           <div className="review-type-selectr">
             <label htmlFor="reviewType">Select Review Type:</label>
             <select id="reviewType" value={selectedReviewType} onChange={handleReviewTypeChange}>
@@ -152,7 +152,7 @@ const Detailss = () => {
               {renderFormParameters()}
             </div>
           ) : (
-            <h2>No form submission found for the selected review type.</h2>
+            <h2>Not Validated</h2>
           )}
         </div>
         <div className="add">

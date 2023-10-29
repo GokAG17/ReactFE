@@ -25,6 +25,7 @@ const Calendar = () => {
     fetchCurrentUser();
     fetchEvents();
     fetchBookedSlots();
+    fetchGuideEvents(); // New function to fetch guide events
   }, []);
 
   const fetchCurrentUser = async () => {
@@ -95,6 +96,71 @@ const Calendar = () => {
       .catch(error => console.error('Error fetching booked slots:', error));
   };
 
+  // New function to fetch guide events
+  const fetchGuideEvents = async () => {
+    const studentRollNo = getCookie('loggedIn');
+
+    try {
+      console.log('Fetching student roll number:', studentRollNo);
+
+      try {
+        const guideResponse = await fetch(`${apiUrl}/api/formproject/studguide?rollNumber=${studentRollNo}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+        });
+
+        if (guideResponse.ok) {
+          const guideData = await guideResponse.json();
+          const guideRollNumber = guideData.guideRollNumber;
+
+          if (guideRollNumber) {
+            console.log('Fetched guide roll number:', guideRollNumber);
+
+            try {
+              const guideEventsResponse = await fetch(`${apiUrl}/api/guide-events?guideRollNo=${guideRollNumber}`, {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+              });
+
+              if (guideEventsResponse.ok) {
+                console.log('Fetched guide events successfully');
+                const guideEventsData = await guideEventsResponse.json();
+
+                // Convert guide events to calendar events
+                const guideEventsWithDateObjects = guideEventsData.map(event => ({
+                  ...event,
+                  start: new Date(event.start),
+                  end: new Date(event.end),
+                  type: 'guideEvent', // Custom type for guide events
+                }));
+
+                setEvents(prevEvents => [...prevEvents, ...guideEventsWithDateObjects]);
+              } else {
+                console.error('Error fetching guide events:', guideEventsResponse.statusText);
+              }
+            } catch (error) {
+              console.error('Error fetching guide events:', error);
+            }
+          } else {
+            console.error('Guide roll number is missing in the response:', guideData);
+          }
+        } else {
+          console.error('Error fetching guide roll number:', guideResponse.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching guide roll number:', error);
+      }
+    } catch (error) {
+      console.error('Error fetching current user:', error);
+    }
+  };
+
   const customEventComponent = ({ event }) => (
     <div className="custom-event">
       <strong>{event.title}</strong>
@@ -121,80 +187,7 @@ const Calendar = () => {
       setIsModalOpen(true);
     }
   };
-
-  const handleDeleteEvent = (eventId) => {
-    fetch(`${apiUrl}/api/events/${eventId}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-    })
-      .then(response => {
-        if (response.ok) {
-          setEvents(events.filter(e => e.id !== eventId));
-          setSelectedEvent(null);
-          setIsModalOpen(false);
-        } else {
-          console.error('Error deleting event:', response.status, response.statusText);
-        }
-      })
-      .catch(error => {
-        console.error('Error deleting event:', error);
-      });
-  };
-
-  const handleDeleteSlot = (slotId) => {
-    // Update the URL to match the server route for deleting booked slots
-    fetch(`${apiUrl}/api/booked-slots/${slotId}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-    })
-      .then(response => {
-        if (response.ok) {
-          // Update the state and close the modal if deletion is successful
-          setEvents(events.filter(e => e.id !== slotId));
-          setSelectedEvent(null);
-          setIsModalOpen(false);
-        } else {
-          console.error('Error deleting slot:', response.status, response.statusText);
-        }
-      })
-      .catch(error => {
-        console.error('Error deleting slot:', error);
-      });
-  };
-
-  const handleEventResize = (eventResizeInfo) => {
-    if (currentUser && (currentUser.role === 'Student' || currentUser.role === 'Admin')) {
-      const eventToUpdate = {
-        id: eventResizeInfo.event.id,
-        start: eventResizeInfo.start,
-        end: eventResizeInfo.end,
-      };
-
-      fetch(`${apiUrl}/api/events/${eventToUpdate.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(eventToUpdate),
-      })
-        .then(response => {
-          if (response.ok) {
-            setEvents(events.map(e => (e.id === eventToUpdate.id ? eventToUpdate : e)));
-          } else {
-            console.error('Error updating event:', response.status, response.statusText);
-          }
-        })
-        .catch(error => console.error('Error updating event:', error));
-    }
-  };
-
+  
   const eventSlotStyle = (event) => {
     if (event.type === 'event') {
       return {
@@ -251,7 +244,6 @@ const Calendar = () => {
                 `${local.format(start, 'YYYY-MM-DD h:mm A', culture)} - ${local.format(end, 'YYYY-MM-DD h:mm A', culture)}`,
             }}
             onSelectEvent={handleEventClick}
-            onEventResize={handleEventResize}
             eventPropGetter={eventSlotStyle}
           />
         </div>
@@ -260,11 +252,11 @@ const Calendar = () => {
             visible={isModalOpen}
             onCancel={() => setIsModalOpen(false)}
             footer={[
-              <Button key="close" onClick={() => setIsModalOpen(false )}>
+              <Button key="close" onClick={() => setIsModalOpen(false)}>
                 Close
               </Button>,
               currentUser &&
-                (currentUser.role === 'Admin' || currentUser.role === 'Student') 
+              (currentUser.role === 'Admin' || currentUser.role === 'Student')
             ]}
           >
             <p>{selectedEvent.title}</p>

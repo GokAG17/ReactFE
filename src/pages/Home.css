@@ -200,23 +200,23 @@ footer p {
 
 
 .info-content a {
-  color: #007bff; /* Set link color to blue */
-  text-decoration: none; /* Remove underline from links */
+  color: #007bff;
+  text-decoration: none; 
 }
 
 .info-content a:hover {
-  text-decoration: underline; /* Add underline on hover */
+  text-decoration: underline; 
 }
 
 .services-content {
-  background-image: url('C:\Users\Gokulraj\Project\React_Project\Client\public\images\Images\side-wave_background.jpg'); /* Use a relative path */
+  background-image: url('../../public/images/Images/side-wave_background.jpg');
   background-size: cover;
   padding: 200px;
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 40px;
   height: auto; 
-  text-align: center;/* Let the container adjust its height based on content */
+  text-align: center;
 }
 
 .get-started-button {

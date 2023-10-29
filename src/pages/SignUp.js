@@ -77,14 +77,12 @@ const SignUp = () => {
           setUniversity('');
           setRollNo('');
           setDepartment('');
-          // Redirect to the login page
           history.push('/');
         })
         .catch((error) => {
           console.log(error);
         });
     } else {
-      // Missing fields
       console.log('Please fill in all fields');
     }
   };
@@ -95,7 +93,6 @@ const SignUp = () => {
         <h2>Sign Up</h2>
         <form onSubmit={handleFormSubmit}>
           <div className="form-half">
-            {/* First 5 input fields */}
             <div className="form-group">
               <label htmlFor="firstName">
                 <i className="fas fa-user"></i> First Name:
